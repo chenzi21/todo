@@ -1,0 +1,13 @@
+version: '1.0'
+
+services:
+  app:
+    build:
+      context: ../../frontned
+      dockerfile: Dockerfile
+    container_name: docker-next-prod
+    ports:
+      - '3002:3000'
+    volumes:
+      - ../../frontned:/app
+      - /app/node_modules

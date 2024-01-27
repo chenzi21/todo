@@ -1,0 +1,6 @@
+FROM mysql:latest
+
+WORKDIR /
+
+ADD ./todo.sql /docker-entrypoint-initdb.d/todo.sql
+RUN chmod -R 775 /docker-entrypoint-initdb.d

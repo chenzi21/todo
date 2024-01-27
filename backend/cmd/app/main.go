@@ -5,14 +5,16 @@ import (
 	"project/internal/database"
 	"project/internal/server"
 	"time"
+	"log"
 )
 
 func main() {
 	var dbErr error
 
-	database.DBcon, dbErr = sql.Open("mysql", "chenzadik:password@tcp(localhost:3306)/todo")
+	// init database
+	database.DBcon, dbErr = sql.Open("mysql", "root:password@tcp(mysql:3306)/todo")
 	if dbErr != nil {
-		panic(dbErr)
+		log.Panic(dbErr)
 	}
 
 	database.DBcon.SetConnMaxLifetime(time.Minute * 3)
@@ -21,5 +23,6 @@ func main() {
 
 	defer database.DBcon.Close()
 
+	// init server routes
 	server.InitServer()
 }

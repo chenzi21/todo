@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  mysql:
+    build:
+        dockerfile: Dockerfile.db
+    container_name: mysql-dev
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password' # TODO: Change this
+      MYSQL_USER: 'chenzadik'
+      MYSQL_DATABASE: 'todo'
+      MYSQL_PASSWORD: 'password'
+    volumes:
+      - mysql-data-volume:/var/lib/mysql
+
+  server:
+    build:
+      context: ../../backend/
+      dockerfile: ../docker/development/Dockerfile.server
+    container_name: server-dev
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mysql
+
+  app:
+    build:
+      context: ../../frontend/
+      dockerfile: ../docker/development/Dockerfile.app
+    container_name: app-dev
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mysql
+      - server
+    
+volumes:
+  mysql-data-volume:
+    

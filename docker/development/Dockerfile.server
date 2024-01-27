@@ -1,0 +1,13 @@
+FROM golang:latest AS builder
+
+WORKDIR /
+
+COPY . .
+
+RUN go build cmd/app/main.go
+
+FROM golang:latest AS RUNNER
+
+COPY --from=builder . .
+
+ENTRYPOINT ["./main"]

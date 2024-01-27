@@ -32,7 +32,7 @@ export default function ToDoFrom() {
 	const handleSubmit = useCallback(() => {
 		const formValues = form.getValues();
 		try {
-			fetch("http://localhost:8080/addTodo", {
+			fetch("http://server:8080/addTodo", {
 				method: "POST",
 				body: JSON.stringify({
 					todo: formValues.todo,

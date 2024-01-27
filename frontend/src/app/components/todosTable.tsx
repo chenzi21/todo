@@ -17,7 +17,7 @@ interface DataTableProps<TData> {
 
 const deleteToDo = (id: string) => {
 	try {
-		fetch("http://localhost:8080/deleteToDo", {
+		fetch("http://server:8080/deleteToDo", {
 			method: "POST",
 			body: JSON.stringify({ id }),
 			cache: "no-store",
@@ -154,7 +154,7 @@ export default function TodosTable<TData extends { id: number }>({ data }: DataT
 							onClick={() => {
 								const ids = Object.keys(rowSelection).map((val) => data[Number(val)].id);
 								try {
-									fetch("http://localhost:8080/finishTodos", {
+									fetch("http://server:8080/finishTodos", {
 										method: "POST",
 										body: JSON.stringify({ ids }),
 										cache: "no-store",

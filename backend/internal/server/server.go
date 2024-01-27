@@ -30,6 +30,8 @@ func InitServer() {
 			w.WriteHeader(http.StatusConflict)
 			return
 		}
+
+		w.WriteHeader(http.StatusCreated)
 	})
 
 	http.HandleFunc("/finishTodos", func(w http.ResponseWriter, r *http.Request) {
@@ -74,6 +76,7 @@ func InitServer() {
 		_, err := apiHelpers.GetRequestGenericChecksAndDataValidation(w, r)
 
 		if err != nil {
+			log.Println(err)
 			return
 		}
 

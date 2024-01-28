@@ -1,13 +1,15 @@
 FROM golang:latest AS builder
 
-WORKDIR /
+WORKDIR /build
 
 COPY . .
+
+RUN go get -u "github.com/go-sql-driver/mysql"
 
 RUN go build cmd/app/main.go
 
 FROM golang:latest AS RUNNER
 
-COPY --from=builder . .
+COPY --from=builder /build/main ./main
 
 ENTRYPOINT ["./main"]

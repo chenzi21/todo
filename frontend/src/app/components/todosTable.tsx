@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
+import { finishTodos, deleteTodo } from "@/libs/todoDBActions";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface DataTableProps<TData> {
 	data: TData[];
@@ -17,11 +19,7 @@ interface DataTableProps<TData> {
 
 const deleteToDo = (id: string) => {
 	try {
-		fetch("http://server:8080/deleteToDo", {
-			method: "POST",
-			body: JSON.stringify({ id }),
-			cache: "no-store",
-		});
+		deleteTodo(id)
 	} catch (e: any) {
 		console.log(e);
 		toast("There Was an Error Deleting To Do", {
@@ -29,13 +27,10 @@ const deleteToDo = (id: string) => {
 		});
 		return;
 	}
-	if (window) {
-		window.location.reload();
-	}
 	toast("To Do deleted Successfully");
 };
 
-const columns: ColumnDef<any, any>[] = [
+const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => ([
 	{
 		id: "select",
 		cell: ({ row }) => (
@@ -44,6 +39,7 @@ const columns: ColumnDef<any, any>[] = [
 				checked={!row.original.is_done && row.getIsSelected()}
 				onCheckedChange={(value) => row.toggleSelected(!!value)}
 				aria-label="Select row"
+				className="block"
 			/>
 		),
 		enableSorting: false,
@@ -81,18 +77,28 @@ const columns: ColumnDef<any, any>[] = [
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
 					<DropdownMenuLabel>Actions</DropdownMenuLabel>
-					<DropdownMenuItem className="cursor-pointer" onClick={() => deleteToDo(row.original.id)}>
+					<DropdownMenuItem className="cursor-pointer" onClick={() => {
+							try {
+								deleteToDo(row.original.id)
+								router.refresh();
+							} catch(e: any) {
+								console.log(e)
+							}
+						}
+					}>
 						Delete To Do
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 		),
 	},
-];
+]);
 
 export default function TodosTable<TData extends { id: number }>({ data }: DataTableProps<TData>) {
 	const router = useRouter();
 	const [rowSelection, setRowSelection] = React.useState({});
+
+	const columns = useColumns(router);
 
 	const table = useReactTable({
 		data,
@@ -154,11 +160,7 @@ export default function TodosTable<TData extends { id: number }>({ data }: DataT
 							onClick={() => {
 								const ids = Object.keys(rowSelection).map((val) => data[Number(val)].id);
 								try {
-									fetch("http://server:8080/finishTodos", {
-										method: "POST",
-										body: JSON.stringify({ ids }),
-										cache: "no-store",
-									});
+									finishTodos(ids)
 								} catch (e: any) {
 									console.log(e);
 									toast("Error Updating To Dos", {

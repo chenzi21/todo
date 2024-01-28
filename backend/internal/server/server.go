@@ -53,7 +53,7 @@ func InitServer() {
 		return
 	})
 
-	http.HandleFunc("/deleteToDo", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/deleteTodo", func(w http.ResponseWriter, r *http.Request) {
 		schema, err := apiHelpers.PostRequestGenericChecksAndDataValidation[todoDB.DeleteToDoSchema](w, r)
 
 		if err != nil {

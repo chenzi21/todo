@@ -18,7 +18,7 @@ export default function ToDoDatePicker(props: Omit<InputProps, "value"> & { valu
 			<PopoverTrigger asChild>
 				<Button variant={"outline"} className={"w-full justify-start text-left font-normal"}>
 					<CalendarIcon className="mr-2 h-4 w-4" />
-					{date ? `${format(date, "PPP")} ${time}` : <span>Pick a date</span>}
+					{date ? `${format(date.toString(), "PPP")} ${time}` : <span>Pick a date</span>}
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="w-auto p-0" align="start">

@@ -9,8 +9,9 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { addTodo } from "@/libs/todoDBActions";
 
-type Inputs = {
+export type Inputs = {
 	todo: string;
 	date: CDate;
 	urgency: number;
@@ -32,15 +33,7 @@ export default function ToDoFrom() {
 	const handleSubmit = useCallback(() => {
 		const formValues = form.getValues();
 		try {
-			fetch("http://server:8080/addTodo", {
-				method: "POST",
-				body: JSON.stringify({
-					todo: formValues.todo,
-					urgency: Number(formValues.urgency),
-					date: new CDate(formValues.date).toDateTime(),
-				}),
-				cache: "no-store",
-			});
+			addTodo(formValues)
 		} catch (e: any) {
 			console.log(e);
 			toast("To Do failed to Create", {

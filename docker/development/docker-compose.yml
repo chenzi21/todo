@@ -12,7 +12,7 @@ services:
       MYSQL_DATABASE: 'todo'
       MYSQL_PASSWORD: 'password'
     volumes:
-      - mysql-data-volume:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
 
   server:
     build:
@@ -24,6 +24,15 @@ services:
     depends_on:
       - mysql
 
+  cache:
+    build:
+      context: .
+      dockerfile: Dockerfile.cache
+    container_name: cache-dev
+    # entrypoint: ./redis-init.sh
+    volumes:
+      - redis-data:/data
+
   app:
     build:
       context: ../../frontend/
@@ -32,9 +41,10 @@ services:
     ports:
       - '3000:3000'
     depends_on:
-      - mysql
       - server
+      - cache
     
 volumes:
-  mysql-data-volume:
+  mysql-data:
+  redis-data:
     

@@ -37,7 +37,7 @@ export async function finishTodos(ids: number[]) {
     }
 }
 
-export async function deleteTodo(id: string) {
+export async function deleteTodo(id: number) {
     "use server";
 
     try {

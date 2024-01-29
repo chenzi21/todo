@@ -10,6 +10,19 @@ CREATE TABLE IF NOT EXISTS `todo`.`todos` (
     PRIMARY KEY(id)
 );
 
+CREATE TABLE IF NOT EXISTS `todo`.`users` (
+    id VARCHAR(32) NOT NULL DEFAULT (UUID()),
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+
+CREATE TABLE IF NOT EXISTS `todo`.`sessions` (
+    id VARCHAR(32) NOT NULL DEFAULT (UUID()),
+    userId VARCHAR(255) NOT NULL,
+    FOREIGN KEY (userId) REFRENCES `todo`.`users`(id)
+)
+
 CREATE USER IF NOT EXISTS chenzadik;
 
 GRANT ALL PRIVILEGES ON todo.* TO 'chenzadik'@'localhost';

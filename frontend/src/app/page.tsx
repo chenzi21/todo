@@ -1,6 +1,6 @@
 "use server";
 
-import TodosTable from "../components/todosPage/todosTable";
+import TodosTable from "@/components/todosPage/todosTable";
 import { Suspense } from "react";
 
 export default async function Home() {

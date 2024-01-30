@@ -1,6 +1,6 @@
 "use server";
 
-import { Inputs } from "@/app/addToDo/components/form/ToDoForm";
+import { Inputs } from "@/components/addTodo/ToDoForm";
 import CDate from "./CDate";
 
 export async function addTodo(formValues: Inputs) {

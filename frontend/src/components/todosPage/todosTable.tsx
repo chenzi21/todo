@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { ColumnDef, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -12,12 +11,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuLab
 import { MoreHorizontal } from "lucide-react";
 import { finishTodos, deleteTodo } from "@/libs/todoDBActions";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useState } from "react";
 
 interface DataTableProps<TData> {
 	data: TData[];
 }
 
-const deleteToDo = (id: string) => {
+const deleteToDo = (id: number) => {
 	try {
 		deleteTodo(id)
 	} catch (e: any) {
@@ -96,7 +96,7 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => ([
 
 export default function TodosTable<TData extends { id: number }>({ data }: DataTableProps<TData>) {
 	const router = useRouter();
-	const [rowSelection, setRowSelection] = React.useState({});
+	const [rowSelection, setRowSelection] = useState({});
 
 	const columns = useColumns(router);
 

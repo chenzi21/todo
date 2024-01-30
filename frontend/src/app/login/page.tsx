@@ -1,6 +1,7 @@
 "use server";
 
 import LoginForm from "@/components/login/LoginForm";
+import { Suspense } from "react";
 
 export async function handleSubmit(test: any) {
     "use server";
@@ -10,6 +11,10 @@ export async function handleSubmit(test: any) {
 
 export default async function Login() {
 	return (
-        <LoginForm handleSubmit={handleSubmit}/>
+        <main className="flex min-h-screen flex-col items-center justify-between p-24" style={{ minHeight: "100%" }}>
+            <Suspense fallback={<h2>Loading...</h2>}>
+                <LoginForm handleSubmit={handleSubmit} />
+            </Suspense>
+        </main>
     );
 }

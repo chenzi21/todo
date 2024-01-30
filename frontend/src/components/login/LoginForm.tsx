@@ -33,7 +33,7 @@ export default function LoginForm({ handleSubmit }: Props) {
 					name="username"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>USERNAME</FormLabel>
+							<FormLabel>username</FormLabel>
 							<FormControl>
 								<Input
 									{...form.register("username", { required: true, minLength: 2 })}
@@ -52,7 +52,7 @@ export default function LoginForm({ handleSubmit }: Props) {
 					name="password"
 					render={({ field }) => (
 						<FormItem className="flex flex-col">
-							<FormLabel>PASSWORD</FormLabel>
+							<FormLabel>password</FormLabel>
 							<FormControl>
 								<Input {...field} name="password" type="text" />
 							</FormControl>

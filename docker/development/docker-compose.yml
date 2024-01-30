@@ -29,7 +29,6 @@ services:
       context: .
       dockerfile: Dockerfile.cache
     container_name: cache-dev
-    # entrypoint: ./redis-init.sh
     volumes:
       - redis-data:/data
 
@@ -43,6 +42,10 @@ services:
     depends_on:
       - server
       - cache
+    # volumes:
+    #   - ../../frontend/:/app
+    #   - /app/node_modules
+    #   - /app/.next
     
 volumes:
   mysql-data:

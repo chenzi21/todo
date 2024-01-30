@@ -1,6 +1,6 @@
 FROM node:18-alpine AS installer
 
-WORKDIR /
+WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
 
@@ -9,11 +9,9 @@ RUN npm install -g pnpm && \
 
 FROM node:18-alpine as runner
 
-WORKDIR /frontend
+WORKDIR /app
 
-RUN apk --no-cache add curl
-
-COPY --from=installer . .
+COPY --from=installer ./app ./
 COPY . .
 
 CMD ["npm", "run", "dev"]

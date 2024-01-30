@@ -19,7 +19,7 @@ export async function createSession(userId: UserId): Promise<SessionId | void> {
     
     try {
         if (!redisClient.isOpen) await redisClient.connect();
-        redisClient.set(`session:${sessionId}`, userId)
+        redisClient.set("session:", `${sessionId}_${userId}`)
     } catch(e: any) {
         throw new Error(e)
     }
@@ -28,12 +28,12 @@ export async function createSession(userId: UserId): Promise<SessionId | void> {
     
 }
 
-export async function getSession(sessionId: SessionId): Promise<UserId | null> {
+export async function getSession(): Promise<UserId | null> {
     "use server";
 
     try {
         if (!redisClient.isOpen) await redisClient.connect();
-        return redisClient.get(`session:${sessionId}`)
+        return redisClient.get("session:")
     } catch(e: any) {
         throw new Error(e)
     }

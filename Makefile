@@ -4,6 +4,12 @@ build-development: ## Build the development docker image.
 
 .PHONY: start-development
 start-development: ## Start the development docker container.
+	@if [ $(delete-data) = 1 ];then\
+		docker container stop $$(docker container ps -aq);\
+		docker container prune;\
+		docker volume rm development_mysql-data;\
+	fi
+
 	DOCKER_BUILDKIT=0 docker compose -f docker/development/docker-compose.yml up
 
 .PHONY: stop-development

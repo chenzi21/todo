@@ -1,12 +1,19 @@
 "use server";
 
-import LoginForm from "@/components/login/LoginForm";
+import LoginForm, { Inputs } from "@/components/login/LoginForm";
+import { authenticateUser } from "@/libs/usersDBActions";
 import { Suspense } from "react";
 
-export async function handleSubmit(test: any) {
+export async function handleSubmit(args: Inputs): Promise<boolean> {
     "use server";
 
-    console.log(test);
+    try {
+        await authenticateUser(args)
+        return true;
+    } catch(e: any) {
+        console.log(e);
+        return false;
+    }
 }
 
 export default async function Login() {

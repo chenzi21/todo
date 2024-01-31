@@ -1,16 +1,7 @@
 "use server";
 
-import TodosTable from "@/components/todosPage/todosTable";
-import { Suspense } from "react";
-
+import { redirect } from "next/navigation";
 export default async function Home() {
-	// const todos = await fetch("http://server:8080/getTodos", { cache: "no-store" }).then((data) => data.json());
-
-	return (
-		<main className="flex min-h-screen flex-col items-center justify-between p-24" style={{ minHeight: "100%" }}>
-			<Suspense fallback={<h2>Loading...</h2>}>
-				<TodosTable data={[]} />
-			</Suspense>
-		</main>
-	);
+    redirect("/todos");
 }
+

@@ -12,6 +12,7 @@ services:
       MYSQL_DATABASE: 'todo'
       MYSQL_PASSWORD: 'password'
     volumes:
+      - ./mysql-scripts:/docker-entrypoint-initdb.d/
       - mysql-data:/var/lib/mysql
 
   server:
@@ -23,14 +24,8 @@ services:
       - '8080:8080'
     depends_on:
       - mysql
-
-  cache:
-    build:
-      context: .
-      dockerfile: Dockerfile.cache
-    container_name: cache-dev
     volumes:
-      - redis-data:/data
+      - ../../backend/:/go/src/app
 
   app:
     build:
@@ -41,13 +36,11 @@ services:
       - '3000:3000'
     depends_on:
       - server
-      - cache
-    # volumes:
-    #   - ../../frontend/:/app
-    #   - /app/node_modules
-    #   - /app/.next
+    volumes:
+      - ../../frontend/:/app
+      - /app/node_modules
+      - /app/.next
     
 volumes:
   mysql-data:
-  redis-data:
     

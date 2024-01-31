@@ -13,15 +13,17 @@ func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
 
-func PostRequestGenericChecksAndDataValidation[K any](w http.ResponseWriter, r *http.Request) (data K, err error) {
+func RequestWithSchemaChecksAndDataValidation[K any](w http.ResponseWriter, r *http.Request, m string) (data K, err error) {
 	enableCors(&w)
 
-	if r.Method != http.MethodPost {
+	if r.Method != m {
+		log.Println("Method not allowed")
 		w.WriteHeader(405) // Return 405 Method Not Allowed.
 		return
 	}
 	// Read request body.
 	body, err := io.ReadAll(r.Body)
+	
 	if err != nil {
 		log.Printf("Body read error, %v", err)
 		w.WriteHeader(500) // Return 500 Internal Server Error.
@@ -30,6 +32,7 @@ func PostRequestGenericChecksAndDataValidation[K any](w http.ResponseWriter, r *
 
 	// Parse body as json.
 	var schema K
+
 	if err = json.Unmarshal(body, &schema); err != nil {
 		log.Printf("Body parse error, %v", err)
 		w.WriteHeader(400) // Return 400 Bad Request.
@@ -39,10 +42,11 @@ func PostRequestGenericChecksAndDataValidation[K any](w http.ResponseWriter, r *
 	return schema, err
 }
 
-func GetRequestGenericChecksAndDataValidation(w http.ResponseWriter, r *http.Request) (data []byte, err error) {
+func GetRequestChecksAndDataValidation(w http.ResponseWriter, r *http.Request) (data []byte, err error) {
 	enableCors(&w)
 
 	if r.Method != http.MethodGet {
+		log.Println("Method not allowed")
 		w.WriteHeader(405) // Return 405 Method Not Allowed.
 		return
 	}

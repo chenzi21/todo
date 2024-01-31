@@ -1,15 +1,18 @@
-FROM golang:latest AS builder
+# Go Version
+FROM golang:1.21-rc-alpine3.17
 
-WORKDIR /build
+# Environment variables which CompileDaemon requires to run
+ENV PROJECT_DIR=/go/src/app \
+    GO111MODULE=on \
+    CGO_ENABLED=0
 
+# Basic setup of the container
+WORKDIR /go/src/app
 COPY . .
 
-RUN go get -u "github.com/go-sql-driver/mysql"
+# Get CompileDaemon
+RUN go install -mod=mod github.com/githubnemo/CompileDaemon
 
-RUN go build cmd/app/main.go
-
-FROM golang:latest AS RUNNER
-
-COPY --from=builder /build/main ./main
-
-ENTRYPOINT ["./main"]
+# The build flag sets how to build after a change has been detected in the source code
+# The command flag sets how to run the app after it has been built
+ENTRYPOINT CompileDaemon -directory="." -build="go build -o main" -command="./main"

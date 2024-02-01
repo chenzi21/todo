@@ -28,8 +28,6 @@ func Init() {
 			return
 		}
 
-		log.Printf("userId: %v", userId)
-
 		var sessionId string
 
 		sessionId, err = sessionsDB.CreateSession(userId)
@@ -40,14 +38,10 @@ func Init() {
 			return
 		}		
 		
-		log.Printf("userId: %v", sessionId)
-
 
 		type ReturnData struct {
 			SessionId string `json:"sessionId"`
 		}
-
-		log.Printf("userId: %v", ReturnData{SessionId: sessionId})
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)

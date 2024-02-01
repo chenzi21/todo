@@ -49,9 +49,9 @@ export default function PasswordInput({
                                         "password needs to be at least 8 characters and contain at least one lower case letter, upper case letter and special character",
                                 },
                             })}
-                            {...form.register(inputName, {
-                                ...registerOptions,
-                            })}
+                            // {...form.register(inputName, {
+                            //     ...registerOptions,
+                            // })}
                             name={inputName}
                             type="password"
                         />

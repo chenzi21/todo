@@ -26,39 +26,37 @@ func CreateUser(args UserSchema) (string, error) {
 		log.Panic(err)
 		return "", err
 	}
+	var UserId string
 
-	_, err = database.DBcon.Exec("INSERT INTO users(username, password) VALUES(?, ?);", args.Username, hashed)
+	_, err = database.DBcon.Exec("INSERT INTO users(username, password) VALUES(?, ?)", args.Username, hashed)
+	
 	if err != nil {
 		log.Panic(err)
 		return "", err
 	}
 
-	var userId string
+	err = database.DBcon.QueryRow("SELECT id FROM users WHERE username = ?;", args.Username).Scan(&UserId)
 
-	err = database.DBcon.QueryRow("SELECT LAST_INSERT_ID();").Scan(&userId)
+	if err != nil {
+		log.Panic(err)
+		return "", err
+	}
 
-	return userId, nil
+	return UserId, nil
 }
 
 func AuthenticateUser(args UserSchema) (string, error) {
-	var returnValue UserAuthenticationReturnValue
+	var UserId string
+	var Password string
 
-	log.Printf("username: %v", args.Username)
+	err := database.DBcon.QueryRow("SELECT id as userId, password FROM users WHERE username = ?;", args.Username).Scan(&UserId, &Password)
 
-	row := database.DBcon.QueryRow("SELECT id as userId FROM users WHERE username = $1", args.Username)
-
-	log.Printf("row: %v", *row)
-
-
-	err := row.Scan(&returnValue.UserId);
-	
-	if err == sql.ErrNoRows {
-		return "", errors.New("User Doesn't Exist");
-	}
-	
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", errors.New("User Doesn't Exist");
+		}
 		return "", errors.New("Internal Server Error");
 	}
 
-	return returnValue.UserId, bcrypt.CompareHashAndPassword([]byte(returnValue.Password), []byte(args.Password))
+	return UserId, bcrypt.CompareHashAndPassword([]byte(Password), []byte(args.Password))
 }

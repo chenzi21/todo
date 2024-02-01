@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import UserNameInput from "../inputs/UserNameInput";
 import PasswordInput from "../inputs/PasswordInput";
+import { useRouter } from "next/navigation";
 
 export type Inputs = {
     username: string;
@@ -23,6 +24,7 @@ type Props = {
 };
 
 export default function LoginForm({ handleSubmit }: Props) {
+    const router = useRouter();
     const form = useForm<Inputs>({
         defaultValues: initialState,
         shouldUseNativeValidation: true,
@@ -33,12 +35,14 @@ export default function LoginForm({ handleSubmit }: Props) {
             <form
                 onSubmit={async (e) => {
                     e.preventDefault();
+                    form.handleSubmit(() => {});
                     const formData = form.getValues();
                     const isAuthenticated = await handleSubmit(formData);
                     if (isAuthenticated) {
                         toast("Authentication was Successful", {
                             description: "Great to See You again!",
                         });
+                        router.push("/");
                     } else {
                         toast("Authentication Failed", {
                             description:

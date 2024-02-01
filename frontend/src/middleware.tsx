@@ -8,8 +8,6 @@ export default function middleware(request: NextRequest) {
 
     const isAuthenticated = getIsAuthenticated(request);
 
-    console.log("lol", isAuthenticated);
-
     if (
         !isAuthenticated &&
         !request.url.includes("/login") &&

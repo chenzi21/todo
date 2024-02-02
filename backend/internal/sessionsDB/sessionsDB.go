@@ -15,7 +15,7 @@ func CreateSession(userId string) (string, error) {
 		return "", err
 	}
 
-	err = database.DBcon.QueryRow("SELECT LAST_INSERT_ID();").Scan(&sessionId)
+	err = database.DBcon.QueryRow("SELECT id FROM sessions WHERE userId = ? ORDER BY created_at DESC LIMIT 1;", userId).Scan(&sessionId)
 
 	if err != nil {
 		log.Println(err.Error())

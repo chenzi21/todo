@@ -43,9 +43,13 @@ func Init() {
 			SessionId string `json:"sessionId"`
 		}
 
+		var returnData = ReturnData{SessionId: sessionId}
+
+		log.Printf("data: %v", returnData)
+
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(ReturnData{SessionId: sessionId})
+		json.NewEncoder(w).Encode(returnData)
 	})
 
 	http.HandleFunc("/createUser", func(w http.ResponseWriter, r *http.Request) {

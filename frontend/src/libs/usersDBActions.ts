@@ -7,13 +7,17 @@ type User = {
     password: string;
 }
 
-async function setSessionCookie(resBody: any) {
+async function setSessionCookie(response: Response) {
     "use server";
 
-    if ("sessionId" in resBody && typeof resBody.sessionId === "string" && resBody.sessionId.length > 0) {
+    const body = await response.json();
+
+    console.dir(body)
+
+    if ("sessionId" in body && typeof body.sessionId === "string" && body.sessionId.length > 0) {
         const cookieStore = cookies();
 
-        cookieStore.set("session", resBody.sessionId, {
+        cookieStore.set("session", body.sessionId, {
             httpOnly: true,
             secure: true,
             name: "session",
@@ -36,7 +40,7 @@ export async function createUser(user: User) {
                 method: "POST",
                 body: JSON.stringify(user),
                 cache: "no-store",
-            }).then(res => res.json());
+            });
 
         setSessionCookie(response);
     } catch (e: any) {
@@ -53,7 +57,7 @@ export async function authenticateUser(user: User) {
                 method: "POST",
                 body: JSON.stringify(user),
                 cache: "no-store",
-            }).then(res => res.json());
+            });
 
         setSessionCookie(response);
     } catch (e: any) {

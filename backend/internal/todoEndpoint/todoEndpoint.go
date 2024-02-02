@@ -5,6 +5,7 @@ import (
 	"log"      // logging messages to the console.
 	"net/http" // Used for build HTTP servers and clients.
 	"project/internal/apiHelpers"
+	"project/internal/sessionsDB"
 	"project/internal/todoDB"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -14,14 +15,30 @@ func Init() {
 	http.HandleFunc("/addTodo", func(w http.ResponseWriter, r *http.Request) {
 		schema, err := apiHelpers.RequestWithSchemaChecksAndDataValidation[todoDB.AddToDoSchema](w, r, http.MethodPost)
 
+		
 		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		
+		sessionId, err := apiHelpers.GetSessionCookie(r)
+
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		err = todoDB.InsertToDo(schema)
+		userId, err := sessionsDB.GetUserId(sessionId);
+		
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		err = todoDB.InsertToDo(schema, userId)
 
 		if err != nil {
-			w.WriteHeader(http.StatusConflict)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
@@ -74,11 +91,25 @@ func Init() {
 			return
 		}
 
-		data, err := todoDB.GetAllToDos()
+		sessionId, err := apiHelpers.GetSessionCookie(r)
+
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		userId, err := sessionsDB.GetUserId(sessionId);
+		
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		data, err := todoDB.GetAllToDos(userId)
 
 		if err != nil {
 			log.Println(err)
-			w.WriteHeader(500)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 

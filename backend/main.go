@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"project/internal/database"
@@ -30,9 +29,6 @@ func main() {
 	defer database.DBcon.Close()
 
 	log.Println("Starting our simple http server.")
-
-	log.Println("Started on port", portNum)
-	fmt.Println("To close connection CTRL+C :-)")
 
 	todoEndpoint.Init()
 	usersEndpoint.Init()

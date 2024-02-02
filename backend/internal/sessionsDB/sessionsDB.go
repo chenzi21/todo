@@ -1,6 +1,7 @@
 package sessionsDB
 
 import (
+	"database/sql"
 	"log"
 	"project/internal/database"
 )
@@ -11,16 +12,28 @@ func CreateSession(userId string) (string, error) {
 	_, err := database.DBcon.Exec("INSERT INTO sessions(userId) VALUES(?)", userId)
 
 	if err != nil {
-		log.Println(err.Error())
 		return "", err
 	}
 
 	err = database.DBcon.QueryRow("SELECT id FROM sessions WHERE userId = ? ORDER BY created_at DESC LIMIT 1;", userId).Scan(&sessionId)
 
 	if err != nil {
-		log.Println(err.Error())
 		return "", err
 	}
 
 	return sessionId, nil
+}
+
+func GetUserId(sessionId string) (string, error) {
+	var userId string
+	err := database.DBcon.QueryRow("SELECT userId FROM sessions WHERE id = ? ORDER BY created_at DESC LIMIT 1;", sessionId).Scan(&userId)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Panic("user doesn't have an active session")
+		}
+		return "", err
+	}
+
+	return userId, nil
 }

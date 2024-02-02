@@ -24,7 +24,7 @@ func Init() {
 
 		if err != nil {
 			log.Println(err)
-			w.WriteHeader(403)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
@@ -34,7 +34,7 @@ func Init() {
 
 		if err != nil {
 			log.Println(err)
-			w.WriteHeader(500)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}		
 		
@@ -44,8 +44,6 @@ func Init() {
 		}
 
 		var returnData = ReturnData{SessionId: sessionId}
-
-		log.Printf("data: %v", returnData)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -66,7 +64,7 @@ func Init() {
 
 		if err != nil {
 			log.Println(err)
-			w.WriteHeader(500)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
@@ -76,7 +74,7 @@ func Init() {
 
 		if err != nil {
 			log.Println(err)
-			w.WriteHeader(500)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 

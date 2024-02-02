@@ -13,6 +13,16 @@ func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
 
+func GetSessionCookie(r *http.Request) (string, error) {
+	userId, err := r.Cookie("session");
+
+	if err != nil {
+		log.Panic(err)
+		return "", err
+	}
+
+	return userId.Value, nil
+}
 func RequestWithSchemaChecksAndDataValidation[K any](w http.ResponseWriter, r *http.Request, m string) (data K, err error) {
 	enableCors(&w)
 

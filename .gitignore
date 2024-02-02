@@ -1,5 +1,5 @@
 # project modules
-node_modules/
+**/node_modules/
 
 # dotenv environment variable files
 .env
@@ -9,8 +9,8 @@ node_modules/
 .env.local
 
 # Next.js build output
-.next
-out
+**/.next
+**/out
 
 # backend build
 backend/main

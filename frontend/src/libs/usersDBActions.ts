@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import FetchWithCookies from "./extendedFetch";
 
 type User = {
     username: string;
@@ -11,8 +12,6 @@ async function setSessionCookie(response: Response) {
     "use server";
 
     const body = await response.json();
-
-    console.dir(body)
 
     if ("sessionId" in body && typeof body.sessionId === "string" && body.sessionId.length > 0) {
         const cookieStore = cookies();
@@ -35,7 +34,7 @@ export async function createUser(user: User) {
     "use server";
 
     try {
-        const response = await fetch("http://server:8080/createUser",
+        const response = await FetchWithCookies("http://server:8080/createUser",
             {
                 method: "POST",
                 body: JSON.stringify(user),
@@ -52,7 +51,7 @@ export async function authenticateUser(user: User) {
     "use server";
 
     try {
-        const response = await fetch("http://server:8080/authenticateUser",
+        const response = await FetchWithCookies("http://server:8080/authenticateUser",
             {
                 method: "POST",
                 body: JSON.stringify(user),

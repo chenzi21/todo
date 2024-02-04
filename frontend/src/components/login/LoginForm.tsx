@@ -8,6 +8,7 @@ import Link from "next/link";
 import UserNameInput from "../inputs/UserNameInput";
 import PasswordInput from "../inputs/PasswordInput";
 import { useRouter } from "next/navigation";
+import { FormEvent, FormEventHandler } from "react";
 
 export type Inputs = {
     username: string;
@@ -30,27 +31,35 @@ export default function LoginForm({ handleSubmit }: Props) {
         shouldUseNativeValidation: true,
     });
 
+    const onSubmit = async (inputs: Inputs) => {
+        const isAuthenticated = await handleSubmit(inputs);
+        if (isAuthenticated) {
+            toast("Authentication was Successful", {
+                description: "Great to See You again!",
+            });
+            router.push("/");
+        } else {
+            toast("Authentication Failed", {
+                description: "if You are Not a Registered user Please Sign up.",
+            });
+            form.reset(initialState);
+        }
+        form.reset(initialState);
+        router.push("/todos");
+    };
+
+    function onSubmitError() {
+        toast("Submittion Failed", {
+            description: "invalid inputs, please adhere to the input rules.",
+        });
+    }
+
     return (
         <Form {...form}>
             <form
-                onSubmit={async (e) => {
+                onSubmit={(e) => {
                     e.preventDefault();
-                    form.handleSubmit(() => {});
-                    const formData = form.getValues();
-                    const isAuthenticated = await handleSubmit(formData);
-                    if (isAuthenticated) {
-                        toast("Authentication was Successful", {
-                            description: "Great to See You again!",
-                        });
-                        router.push("/");
-                    } else {
-                        toast("Authentication Failed", {
-                            description:
-                                "if You are Not a Registered user Please Sign up.",
-                        });
-                        form.reset(initialState);
-                    }
-                    form.reset(initialState);
+                    form.handleSubmit(onSubmit, onSubmitError);
                 }}
                 className="flex flex-col gap-2"
             >

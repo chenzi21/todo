@@ -31,7 +31,7 @@ export default function UserNameInput({
                         <Input
                             {...form.register("username", {
                                 required: true,
-                                minLength: 2,
+                                minLength: 5,
                             })}
                             {...field}
                             name="username"

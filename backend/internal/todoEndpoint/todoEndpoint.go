@@ -1,33 +1,44 @@
-package server
+package todoEndpoint
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"      // logging messages to the console.
 	"net/http" // Used for build HTTP servers and clients.
 	"project/internal/apiHelpers"
+	"project/internal/sessionsDB"
 	"project/internal/todoDB"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// Port we listen on.
-const portNum string = ":8080"
-
-func InitServer() {
-	log.Println("Starting our simple http server.")
-
+func Init() {
 	http.HandleFunc("/addTodo", func(w http.ResponseWriter, r *http.Request) {
-		schema, err := apiHelpers.PostRequestGenericChecksAndDataValidation[todoDB.AddToDoSchema](w, r)
+		schema, err := apiHelpers.RequestWithSchemaChecksAndDataValidation[todoDB.AddToDoSchema](w, r, http.MethodPost)
 
+		
 		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		
+		sessionId, err := apiHelpers.GetSessionCookie(r)
+
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		err = todoDB.InsertToDo(schema)
+		userId, err := sessionsDB.GetUserId(sessionId);
+		
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		err = todoDB.InsertToDo(schema, userId)
 
 		if err != nil {
-			w.WriteHeader(http.StatusConflict)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
@@ -35,7 +46,7 @@ func InitServer() {
 	})
 
 	http.HandleFunc("/finishTodos", func(w http.ResponseWriter, r *http.Request) {
-		schema, err := apiHelpers.PostRequestGenericChecksAndDataValidation[todoDB.MarkToDosAsDoneSchema](w, r)
+		schema, err := apiHelpers.RequestWithSchemaChecksAndDataValidation[todoDB.MarkToDosAsDoneSchema](w, r, http.MethodPost)
 
 		if err != nil {
 			w.WriteHeader(http.StatusConflict)
@@ -54,7 +65,7 @@ func InitServer() {
 	})
 
 	http.HandleFunc("/deleteTodo", func(w http.ResponseWriter, r *http.Request) {
-		schema, err := apiHelpers.PostRequestGenericChecksAndDataValidation[todoDB.DeleteToDoSchema](w, r)
+		schema, err := apiHelpers.RequestWithSchemaChecksAndDataValidation[todoDB.DeleteToDoSchema](w, r, http.MethodPost)
 
 		if err != nil {
 			w.WriteHeader(http.StatusConflict)
@@ -73,18 +84,32 @@ func InitServer() {
 	})
 
 	http.HandleFunc("/getTodos", func(w http.ResponseWriter, r *http.Request) {
-		_, err := apiHelpers.GetRequestGenericChecksAndDataValidation(w, r)
+		_, err := apiHelpers.GetRequestChecksAndDataValidation(w, r)
 
 		if err != nil {
 			log.Println(err)
 			return
 		}
 
-		data, err := todoDB.GetAllToDos()
+		sessionId, err := apiHelpers.GetSessionCookie(r)
+
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		userId, err := sessionsDB.GetUserId(sessionId);
+		
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		data, err := todoDB.GetAllToDos(userId)
 
 		if err != nil {
 			log.Println(err)
-			w.WriteHeader(500)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
@@ -92,13 +117,4 @@ func InitServer() {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(data)
 	})
-
-	log.Println("Started on port", portNum)
-	fmt.Println("To close connection CTRL+C :-)")
-
-	// Spinning up the server.
-	err := http.ListenAndServe(portNum, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
 }

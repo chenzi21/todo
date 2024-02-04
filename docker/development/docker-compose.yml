@@ -7,34 +7,63 @@ services:
     container_name: mysql-dev
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 'password' # TODO: Change this
-      MYSQL_USER: 'chenzadik'
-      MYSQL_DATABASE: 'todo'
-      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_DATABASE_FILE: /run/secrets/db_database
+      MYSQL_USER_FILE: /run/secrets/db_user
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_root_password
+      - db_database
+      - db_user
+      - db_password
     volumes:
-      - mysql-data-volume:/var/lib/mysql
+      - ./mysql-scripts:/docker-entrypoint-initdb.d/
+      - mysql-data:/var/lib/mysql
 
   server:
     build:
       context: ../../backend/
-      dockerfile: ../docker/development/Dockerfile.server
+      dockerfile: ./development/Dockerfile.server
     container_name: server-dev
     ports:
       - '8080:8080'
     depends_on:
       - mysql
+    environment:
+      DB_DATABASE_FILE: /run/secrets/db_database
+      DB_USER_FILE: /run/secrets/db_user
+      DB_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_database
+      - db_user
+      - db_password
+    volumes:
+      - ../../backend/:/go/src/app
 
   app:
     build:
       context: ../../frontend/
-      dockerfile: ../docker/development/Dockerfile.app
+      dockerfile: ./development/Dockerfile.app
     container_name: app-dev
     ports:
       - '3000:3000'
     depends_on:
-      - mysql
       - server
+    volumes:
+      - ../../frontend/:/app
+      - /app/node_modules
+      - /app/.next
     
 volumes:
-  mysql-data-volume:
+  mysql-data:
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  db_database:
+    file: ./secrets/db_database.txt
+  db_user:
+    file: ./secrets/db_user.txt
+  db_root_password:
+    file: ./secrets/db_root_password.txt
     

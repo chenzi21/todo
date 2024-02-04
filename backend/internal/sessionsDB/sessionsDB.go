@@ -2,7 +2,7 @@ package sessionsDB
 
 import (
 	"database/sql"
-	"log"
+	"errors"
 	"project/internal/database"
 )
 
@@ -30,7 +30,7 @@ func GetUserId(sessionId string) (string, error) {
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Panic("user doesn't have an active session")
+			return "", errors.New("user is not logged in")
 		}
 		return "", err
 	}

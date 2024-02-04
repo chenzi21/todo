@@ -17,3 +17,6 @@ backend/main
 
 # docker secrets
 **/secrets/*
+
+# golang build output
+**/main

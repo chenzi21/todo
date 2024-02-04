@@ -26,8 +26,9 @@ type DeleteToDoSchema struct {
 	Id uint8 `json:"id"`
 }
 
-func InsertToDo(args AddToDoSchema) error {
-	_, err := database.DBcon.Exec("INSERT INTO todos(todo, date, urgency) VALUES(?, ?, ?);", args.Todo, args.Date, args.Urgency)
+func InsertToDo(args AddToDoSchema, userId string) error {
+	_, err := database.DBcon.Exec("INSERT INTO todos(userId, todo, date, urgency) VALUES(?, ?, ?, ?);", userId, args.Todo, args.Date, args.Urgency)
+
 	if err != nil {
 		log.Panic(err)
 		return err
@@ -62,8 +63,8 @@ func MarkToDosAsDone(args MarkToDosAsDoneSchema) error {
 	return nil
 }
 
-func GetAllToDos() ([]ToDo, error) {
-	rows, err := database.DBcon.Query("SELECT id, todo, DATE_FORMAT(date, '%M %d %Y %H:%i') as date, urgency, is_done FROM todos WHERE is_deleted = 0 ORDER BY id DESC")
+func GetAllToDos(userId string) ([]ToDo, error) {
+	rows, err := database.DBcon.Query("SELECT id, todo, DATE_FORMAT(date, '%M %d %Y %H:%i') as date, urgency, is_done FROM todos WHERE userId = ? AND is_deleted = 0 ORDER BY id DESC;", userId)
 
 	if err != nil {
 		log.Panic(err)

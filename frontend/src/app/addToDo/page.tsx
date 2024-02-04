@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import ToDoFrom from "./components/form/ToDoForm";
+import ToDoFrom from "../../components/addTodo/ToDoForm";
 
 export default function Page() {
 	return (

@@ -21,8 +21,10 @@ publish-to-ecr: ## Publish the production docker image.
 	AWS_CONFIG_FILE=~/.aws/config
 	aws ecr get-login-password --region il-central-1 | docker login --username AWS --password-stdin 705252976650.dkr.ecr.il-central-1.amazonaws.com
 
-	docker tag app-prod:latest 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:latest
-	docker tag server-prod:latest 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:latest
-	docker tag db-prod:latest 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:latest
+	docker tag app-prod:latest 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:app-prod
+	docker tag server-prod:latest 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:server-prod
+	docker tag db-prod:latest 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:db-prod
 
-	docker push 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:latest
+	docker push 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:app-prod
+	docker push 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:server-prod
+	docker push 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:db-prod

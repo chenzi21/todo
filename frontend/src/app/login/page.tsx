@@ -1,21 +1,8 @@
 "use server";
 
-import LoginForm, { Inputs } from "@/components/login/LoginForm";
+import LoginForm from "@/components/login/LoginForm";
 import { authenticateUser } from "@/libs/usersDBActions";
 import { Suspense } from "react";
-
-export async function handleSubmit(args: Inputs): Promise<boolean> {
-    "use server";
-
-    try {
-        await authenticateUser(args);
-    } catch (e: any) {
-        console.log(e);
-        return false;
-    }
-
-    return true;
-}
 
 export default async function Login() {
     return (
@@ -24,7 +11,7 @@ export default async function Login() {
             style={{ minHeight: "100%" }}
         >
             <Suspense fallback={<h2>Loading...</h2>}>
-                <LoginForm handleSubmit={handleSubmit} />
+                <LoginForm handleSubmit={authenticateUser} />
             </Suspense>
         </main>
     );

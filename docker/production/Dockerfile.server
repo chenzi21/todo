@@ -1,0 +1,17 @@
+# Go Version
+FROM golang:1.21-rc-alpine3.17
+
+# Environment variables which CompileDaemon requires to run
+ENV PROJECT_DIR=/go/src/app \
+    GO111MODULE=on \
+    CGO_ENABLED=0
+
+# Basic setup of the container
+WORKDIR /go/src/app
+COPY . .
+
+# The build flag sets how to build after a change has been detected in the source code
+# The command flag sets how to run the app after it has been built
+RUN go build -o main
+
+CMD [ "./main" ]

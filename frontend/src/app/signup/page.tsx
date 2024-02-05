@@ -1,22 +1,8 @@
 "use server";
 
-import SignUpForm, { Inputs } from "@/components/signup/SignupForm";
+import SignUpForm from "@/components/signup/SignupForm";
 import { createUser } from "@/libs/usersDBActions";
 import { Suspense } from "react";
-
-export async function handleSubmit(
-    args: Omit<Inputs, "confirmPassword">
-): Promise<boolean> {
-    "use server";
-
-    try {
-        await createUser(args);
-        return true;
-    } catch (e: any) {
-        console.log(e);
-        return false;
-    }
-}
 
 export default async function Signup() {
     return (
@@ -25,7 +11,7 @@ export default async function Signup() {
             style={{ minHeight: "100%" }}
         >
             <Suspense fallback={<h2>Loading...</h2>}>
-                <SignUpForm handleSubmit={handleSubmit} />
+                <SignUpForm handleSubmit={createUser} />
             </Suspense>
         </main>
     );

@@ -18,6 +18,7 @@ import PasswordInput from "../inputs/PasswordInput";
 import { useRouter } from "next/navigation";
 import { Input } from "../ui/input";
 import { BaseSyntheticEvent, FormEvent, useCallback } from "react";
+import { User } from "@/libs/usersDBActions";
 
 export type Inputs = {
     username: string;
@@ -30,7 +31,7 @@ const initialState = {
 } as const;
 
 type Props = {
-    handleSubmit: (args: Inputs) => Promise<boolean>;
+    handleSubmit: (args: User) => Promise<void>;
 };
 
 export default function LoginForm({ handleSubmit }: Props) {
@@ -46,22 +47,20 @@ export default function LoginForm({ handleSubmit }: Props) {
             e?: BaseSyntheticEvent<object, any, any> | undefined
         ) => {
             e?.preventDefault();
-            const isAuthenticated = await handleSubmit(inputs);
-            if (isAuthenticated) {
+            try {
+                await handleSubmit(inputs);
                 toast("Authentication was Successful", {
                     description: "Great to See You again!",
                 });
-                router.push("/");
-            } else {
+                form.reset(initialState);
+                router.push("/todos");
+            } catch (e: any) {
                 toast("Authentication Failed", {
                     description:
                         "if You are Not a Registered user Please Sign up.",
                 });
                 form.reset(initialState);
-                return;
             }
-            form.reset(initialState);
-            router.push("/todos");
         },
         [form]
     );

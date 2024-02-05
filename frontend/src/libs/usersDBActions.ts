@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import FetchWithCookies from "./extendedFetch";
 
-type User = {
+export type User = {
     username: string;
     password: string;
 }

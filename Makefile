@@ -12,18 +12,17 @@ start-development: ## Start the development docker container.
 
 	DOCKER_BUILDKIT=0 docker compose -f docker/development/docker-compose.yml up
 
-.PHONY: stop-development
-stop-development: ## Stop the development docker container.
-	DOCKER_BUILDKIT=0 docker compose -f docker/development/docker-compose.yml down
-
 .PHONY: build-production
 build-production: ## Build the production docker image.
-	DOCKER_BUILDKIT=0 docker compose -f docker/production/docker-compose.yml build
+	DOCKER_BUILDKIT=1 docker compose -f docker/production/docker-compose.yml build
 
-.PHONY: start-production
-start-production: ## Start the production docker container.
-	DOCKER_BUILDKIT=0 docker compose -f docker/production/docker-compose.yml up -d
+.PHONY: publish-to-ecr
+publish-to-ecr: ## Publish the production docker image.
+	AWS_CONFIG_FILE=~/.aws/config
+	aws ecr get-login-password --region il-central-1 | docker login --username AWS --password-stdin 705252976650.dkr.ecr.il-central-1.amazonaws.com
 
-.PHONY: stop-production
-stop-production: ## Stop the production docker container.
-	DOCKER_BUILDKIT=0 docker compose -f docker/production/docker-compose.yml down
+	docker tag app-prod:latest 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:latest
+	docker tag server-prod:latest 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:latest
+	docker tag db-prod:latest 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:latest
+
+	docker push 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:latest

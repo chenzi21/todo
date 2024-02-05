@@ -1,13 +1,66 @@
-version: '1.0'
+version: '3'
 
 services:
-  app:
+  mysql:
+    image: db-prod
     build:
-      context: ../../frontned
-      dockerfile: Dockerfile
-    container_name: docker-next-prod
-    ports:
-      - '3002:3000'
+        dockerfile: Dockerfile.db
+    container_name: mysql-dev
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_DATABASE_FILE: /run/secrets/db_database
+      MYSQL_USER_FILE: /run/secrets/db_user
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_root_password
+      - db_database
+      - db_user
+      - db_password
     volumes:
-      - ../../frontned:/app
-      - /app/node_modules
+      - ./mysql-scripts:/docker-entrypoint-initdb.d/
+      - mysql-data:/var/lib/mysql
+
+  server:
+    image: server-prod
+    build:
+      context: ../../backend/
+      dockerfile: ../docker/production/Dockerfile.server
+    container_name: server-dev
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mysql
+    environment:
+      DB_DATABASE_FILE: /run/secrets/db_database
+      DB_USER_FILE: /run/secrets/db_user
+      DB_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_database
+      - db_user
+      - db_password
+
+  app:
+    image: app-prod
+    build:
+      context: ../../frontend/
+      dockerfile: ../docker/production/Dockerfile.app
+    container_name: app-dev
+    ports:
+      - '3000:3000'
+    depends_on:
+      - server
+    
+volumes:
+  mysql-data:
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  db_database:
+    file: ./secrets/db_database.txt
+  db_user:
+    file: ./secrets/db_user.txt
+  db_root_password:
+    file: ./secrets/db_root_password.txt
+    

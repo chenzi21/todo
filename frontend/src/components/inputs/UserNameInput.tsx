@@ -30,11 +30,17 @@ export default function UserNameInput({
                     <FormControl>
                         <Input
                             {...form.register("username", {
-                                required: true,
-                                minLength: 5,
+                                required: {
+                                    value: true,
+                                    message: "user name is required",
+                                },
+                                minLength: {
+                                    value: 5,
+                                    message:
+                                        "user name must be at least 5 characters long",
+                                },
                             })}
                             {...field}
-                            name="username"
                             type="text"
                         />
                     </FormControl>

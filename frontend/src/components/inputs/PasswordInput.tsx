@@ -39,25 +39,23 @@ export default function PasswordInput({
                         <Input
                             {...field}
                             {...form.register(inputName, {
-                                required: true,
-                                minLength: 8,
+                                required: {
+                                    value: true,
+                                    message: "password is required",
+                                },
                                 pattern: {
-                                    value: new RegExp(
-                                        "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$"
-                                    ),
+                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                                     message:
-                                        "password needs to be at least 8 characters and contain at least one lower case letter, upper case letter and special character",
+                                        "password needs to be at least 8 characters and contain at least one lower case letter, upper case letter and special character (@$!%*?&)",
                                 },
                             })}
-                            // {...form.register(inputName, {
-                            //     ...registerOptions,
-                            // })}
-                            name={inputName}
+                            {...form.register(inputName, {
+                                ...registerOptions,
+                            })}
                             type="password"
                         />
                     </FormControl>
                     <FormDescription>{description}</FormDescription>
-                    <FormMessage />
                 </FormItem>
             )}
         />

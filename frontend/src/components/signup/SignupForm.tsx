@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import UserNameInput from "../inputs/UserNameInput";
 import PasswordInput from "../inputs/PasswordInput";
 import { useRouter } from "next/navigation";
+import { BaseSyntheticEvent } from "react";
 
 export type Inputs = {
     username: string;
@@ -31,8 +32,16 @@ export default function SignUpForm({ handleSubmit }: Props) {
         shouldUseNativeValidation: true,
     });
 
-    const onSubmit = async (inputs: Inputs) => {
-        const isAuthenticated = await handleSubmit(inputs);
+    const onSubmit = async (
+        inputs: Inputs,
+        e?: BaseSyntheticEvent<object, any, any> | undefined
+    ) => {
+        e?.preventDefault();
+
+        const isAuthenticated = await handleSubmit({
+            password: inputs.password,
+            username: inputs.username,
+        });
         if (isAuthenticated) {
             toast("Authentication was Successful", {
                 description: "Great to See You again!",
@@ -48,7 +57,11 @@ export default function SignUpForm({ handleSubmit }: Props) {
         router.push("/todos");
     };
 
-    function onSubmitError() {
+    function onSubmitError(
+        _: any,
+        e?: BaseSyntheticEvent<object, any, any> | undefined
+    ) {
+        e?.preventDefault();
         toast("Submittion Failed", {
             description: "invalid inputs, please adhere to the input rules.",
         });
@@ -57,10 +70,7 @@ export default function SignUpForm({ handleSubmit }: Props) {
     return (
         <Form {...form}>
             <form
-                onSubmit={async (e) => {
-                    e.preventDefault();
-                    form.handleSubmit(onSubmit, onSubmitError);
-                }}
+                onSubmit={form.handleSubmit(onSubmit, onSubmitError)}
                 className="flex flex-col gap-2"
             >
                 <UserNameInput

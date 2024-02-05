@@ -1,6 +1,14 @@
 "use client";
 
-import { Form } from "@/components/ui/form";
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -8,7 +16,8 @@ import Link from "next/link";
 import UserNameInput from "../inputs/UserNameInput";
 import PasswordInput from "../inputs/PasswordInput";
 import { useRouter } from "next/navigation";
-import { FormEvent, FormEventHandler } from "react";
+import { Input } from "../ui/input";
+import { BaseSyntheticEvent, FormEvent, useCallback } from "react";
 
 export type Inputs = {
     username: string;
@@ -31,36 +40,47 @@ export default function LoginForm({ handleSubmit }: Props) {
         shouldUseNativeValidation: true,
     });
 
-    const onSubmit = async (inputs: Inputs) => {
-        const isAuthenticated = await handleSubmit(inputs);
-        if (isAuthenticated) {
-            toast("Authentication was Successful", {
-                description: "Great to See You again!",
-            });
-            router.push("/");
-        } else {
-            toast("Authentication Failed", {
-                description: "if You are Not a Registered user Please Sign up.",
-            });
+    const onSubmit = useCallback(
+        async (
+            inputs: Inputs,
+            e?: BaseSyntheticEvent<object, any, any> | undefined
+        ) => {
+            e?.preventDefault();
+            const isAuthenticated = await handleSubmit(inputs);
+            if (isAuthenticated) {
+                toast("Authentication was Successful", {
+                    description: "Great to See You again!",
+                });
+                router.push("/");
+            } else {
+                toast("Authentication Failed", {
+                    description:
+                        "if You are Not a Registered user Please Sign up.",
+                });
+                form.reset(initialState);
+                return;
+            }
             form.reset(initialState);
-        }
-        form.reset(initialState);
-        router.push("/todos");
-    };
+            router.push("/todos");
+        },
+        [form]
+    );
 
-    function onSubmitError() {
-        toast("Submittion Failed", {
-            description: "invalid inputs, please adhere to the input rules.",
-        });
-    }
+    const onSubmitError = useCallback(
+        (_: any, e?: BaseSyntheticEvent<object, any, any> | undefined) => {
+            e?.preventDefault();
+            toast("Submittion Failed", {
+                description:
+                    "invalid inputs, please adhere to the input rules.",
+            });
+        },
+        []
+    );
 
     return (
         <Form {...form}>
             <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    form.handleSubmit(onSubmit, onSubmitError);
-                }}
+                onSubmit={form.handleSubmit(onSubmit, onSubmitError)}
                 className="flex flex-col gap-2"
             >
                 <UserNameInput form={form} />

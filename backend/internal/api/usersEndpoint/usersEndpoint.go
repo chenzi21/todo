@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"project/internal/apiHelpers"
-	"project/internal/sessionsDB"
-	"project/internal/usersDB"
+	"project/internal/api/utils"
+	"project/internal/database/sessionsDB"
+	"project/internal/database/usersDB"
 )
 
 func Init() {
 	http.HandleFunc("/authenticateUser", func(w http.ResponseWriter, r *http.Request) {
-		requestBody, err := apiHelpers.RequestWithSchemaChecksAndDataValidation[usersDB.UserSchema](w, r, http.MethodPost)
+		requestBody, err := apiUtils.RequestWithSchemaChecksAndDataValidation[usersDB.UserSchema](w, r, http.MethodPost)
 
 		if err != nil {
 			log.Println(err)
@@ -51,7 +51,7 @@ func Init() {
 	})
 
 	http.HandleFunc("/createUser", func(w http.ResponseWriter, r *http.Request) {
-		requestBody, err := apiHelpers.RequestWithSchemaChecksAndDataValidation[usersDB.UserSchema](w, r, http.MethodPost)
+		requestBody, err := apiUtils.RequestWithSchemaChecksAndDataValidation[usersDB.UserSchema](w, r, http.MethodPost)
 
 		if err != nil {
 			log.Println(err)

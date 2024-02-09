@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"project/internal/database"
-	"project/internal/todoEndpoint"
-	"project/internal/usersEndpoint"
+	"project/internal/api/todoEndpoint"
+	"project/internal/api/usersEndpoint"
+	"project/internal/database/dbVar"
 	"time"
 )
 
@@ -55,16 +55,16 @@ func main() {
 	connString := generateConnString()
 
 	// init database
-	database.DBcon, dbErr = sql.Open("mysql", connString)
+	dbVar.DBcon, dbErr = sql.Open("mysql", connString)
 	if dbErr != nil {
 		log.Panic(dbErr)
 	}
 
-	database.DBcon.SetConnMaxLifetime(time.Minute * 3)
-	database.DBcon.SetMaxOpenConns(10)
-	database.DBcon.SetMaxIdleConns(10)
+	dbVar.DBcon.SetConnMaxLifetime(time.Minute * 3)
+	dbVar.DBcon.SetMaxOpenConns(10)
+	dbVar.DBcon.SetMaxIdleConns(10)
 
-	defer database.DBcon.Close()
+	defer dbVar.DBcon.Close()
 
 	log.Println("Starting our simple http server.")
 

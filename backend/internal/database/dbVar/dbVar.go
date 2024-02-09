@@ -1,4 +1,4 @@
-package database
+package dbVar
 
 import (
 	"database/sql"

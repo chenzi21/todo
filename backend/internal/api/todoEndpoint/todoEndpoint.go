@@ -4,16 +4,16 @@ import (
 	"encoding/json"
 	"log"      // logging messages to the console.
 	"net/http" // Used for build HTTP servers and clients.
-	"project/internal/apiHelpers"
-	"project/internal/sessionsDB"
-	"project/internal/todoDB"
+	"project/internal/api/utils"
+	"project/internal/database/sessionsDB"
+	"project/internal/database/todoDB"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func Init() {
 	http.HandleFunc("/addTodo", func(w http.ResponseWriter, r *http.Request) {
-		schema, err := apiHelpers.RequestWithSchemaChecksAndDataValidation[todoDB.AddToDoSchema](w, r, http.MethodPost)
+		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.AddToDoSchema](w, r, http.MethodPost)
 
 		
 		if err != nil {
@@ -21,7 +21,7 @@ func Init() {
 			return
 		}
 		
-		sessionId, err := apiHelpers.GetSessionCookie(r)
+		sessionId, err := apiUtils.GetSessionCookie(r)
 
 		if err == http.ErrNoCookie {
 			w.WriteHeader(http.StatusBadRequest)
@@ -46,7 +46,7 @@ func Init() {
 	})
 
 	http.HandleFunc("/finishTodos", func(w http.ResponseWriter, r *http.Request) {
-		schema, err := apiHelpers.RequestWithSchemaChecksAndDataValidation[todoDB.MarkToDosAsDoneSchema](w, r, http.MethodPost)
+		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.MarkToDosAsDoneSchema](w, r, http.MethodPost)
 
 		if err != nil {
 			w.WriteHeader(http.StatusConflict)
@@ -65,7 +65,7 @@ func Init() {
 	})
 
 	http.HandleFunc("/deleteTodo", func(w http.ResponseWriter, r *http.Request) {
-		schema, err := apiHelpers.RequestWithSchemaChecksAndDataValidation[todoDB.DeleteToDoSchema](w, r, http.MethodPost)
+		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.DeleteToDoSchema](w, r, http.MethodPost)
 
 		if err != nil {
 			w.WriteHeader(http.StatusConflict)
@@ -84,14 +84,14 @@ func Init() {
 	})
 
 	http.HandleFunc("/getTodos", func(w http.ResponseWriter, r *http.Request) {
-		_, err := apiHelpers.GetRequestChecksAndDataValidation(w, r)
+		_, err := apiUtils.GetRequestChecksAndDataValidation(w, r)
 
 		if err != nil {
 			log.Println(err)
 			return
 		}
 
-		sessionId, err := apiHelpers.GetSessionCookie(r)
+		sessionId, err := apiUtils.GetSessionCookie(r)
 
 		if err == http.ErrNoCookie {
 			w.WriteHeader(http.StatusBadRequest)

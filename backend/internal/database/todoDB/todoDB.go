@@ -2,7 +2,7 @@ package todoDB
 
 import (
 	"log"
-	"project/internal/database"
+	"project/internal/database/dbVar"
 	"strings"
 )
 
@@ -27,7 +27,7 @@ type DeleteToDoSchema struct {
 }
 
 func InsertToDo(args AddToDoSchema, userId string) error {
-	_, err := database.DBcon.Exec("INSERT INTO todos(userId, todo, date, urgency) VALUES(?, ?, ?, ?);", userId, args.Todo, args.Date, args.Urgency)
+	_, err := dbVar.DBcon.Exec("INSERT INTO todos(userId, todo, date, urgency) VALUES(?, ?, ?, ?);", userId, args.Todo, args.Date, args.Urgency)
 
 	if err != nil {
 		log.Panic(err)
@@ -38,7 +38,7 @@ func InsertToDo(args AddToDoSchema, userId string) error {
 }
 
 func DeleteToDo(args DeleteToDoSchema) error {
-	_, err := database.DBcon.Exec("UPDATE todos SET is_deleted=1 WHERE id=?", args.Id)
+	_, err := dbVar.DBcon.Exec("UPDATE todos SET is_deleted=1 WHERE id=?", args.Id)
 	if err != nil {
 		log.Panic(err)
 		return err
@@ -54,7 +54,7 @@ func MarkToDosAsDone(args MarkToDosAsDoneSchema) error {
 		values[i] = args.Ids[i]
 	}
 
-	_, err := database.DBcon.Exec("UPDATE todos SET is_done=1 WHERE id IN (?"+strings.Repeat(",?", len(args.Ids)-1)+");", values...)
+	_, err := dbVar.DBcon.Exec("UPDATE todos SET is_done=1 WHERE id IN (?"+strings.Repeat(",?", len(args.Ids)-1)+");", values...)
 	if err != nil {
 		log.Panic(err)
 		return err
@@ -64,7 +64,7 @@ func MarkToDosAsDone(args MarkToDosAsDoneSchema) error {
 }
 
 func GetAllToDos(userId string) ([]ToDo, error) {
-	rows, err := database.DBcon.Query("SELECT id, todo, DATE_FORMAT(date, '%M %d %Y %H:%i') as date, urgency, is_done FROM todos WHERE userId = ? AND is_deleted = 0 ORDER BY id DESC;", userId)
+	rows, err := dbVar.DBcon.Query("SELECT id, todo, DATE_FORMAT(date, '%M %d %Y %H:%i') as date, urgency, is_done FROM todos WHERE userId = ? AND is_deleted = 0 ORDER BY id DESC;", userId)
 
 	if err != nil {
 		log.Panic(err)

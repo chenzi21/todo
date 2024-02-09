@@ -2,10 +2,10 @@ version: '3'
 
 services:
   mysql:
-    image: db-prod
+    image: 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:db-prod
     build:
         dockerfile: Dockerfile.db
-    container_name: mysql-dev
+    container_name: db-prod
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
@@ -22,11 +22,11 @@ services:
       - mysql-data:/var/lib/mysql
 
   server:
-    image: server-prod
+    image: 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:server-prod
     build:
       context: ../../backend/
       dockerfile: ../docker/production/Dockerfile.server
-    container_name: server-dev
+    container_name: server-prod
     ports:
       - '8080:8080'
     depends_on:
@@ -41,13 +41,15 @@ services:
       - db_password
 
   app:
-    image: app-prod
+    image: 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:app-prod
     build:
       context: ../../frontend/
       dockerfile: ../docker/production/Dockerfile.app
-    container_name: app-dev
+    container_name: app-prod
+    environment:
+      - PORT=80
     ports:
-      - '3000:3000'
+      - '80:80'
     depends_on:
       - server
     

@@ -34,7 +34,7 @@ export async function createUser(user: User) {
     "use server";
 
     try {
-        const response = await FetchWithCookies("http://server:8080/createUser",
+        const response = await FetchWithCookies("http://localhost:8080/createUser",
             {
                 method: "POST",
                 body: JSON.stringify(user),
@@ -51,7 +51,7 @@ export async function authenticateUser(user: User) {
     "use server";
 
     try {
-        const response = await FetchWithCookies("http://server:8080/authenticateUser",
+        const response = await FetchWithCookies("http://localhost:8080/authenticateUser",
             {
                 method: "POST",
                 body: JSON.stringify(user),

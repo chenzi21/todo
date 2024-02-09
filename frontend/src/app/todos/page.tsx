@@ -5,7 +5,7 @@ import FetchWithCookies from "@/libs/extendedFetch";
 import { Suspense } from "react";
 
 export default async function Home() {
-    const todos = await FetchWithCookies("http://server:8080/getTodos", {
+    const todos = await FetchWithCookies("http://localhost:8080/getTodos", {
         cache: "no-store",
     }).then((data) => data.json());
 

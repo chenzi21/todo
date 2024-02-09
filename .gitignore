@@ -16,7 +16,13 @@
 backend/main
 
 # docker secrets
-**/secrets/*
+docker/**/secrets
+
+# docker sql init scripts
+docker/**/mysql-scripts
 
 # golang build output
-**/main
+backend/main
+
+# ssl certificates
+certs

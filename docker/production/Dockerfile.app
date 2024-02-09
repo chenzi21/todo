@@ -14,19 +14,15 @@ FROM base AS build
 RUN pnpm install --frozen-lockfile
 RUN pnpm run build
 
-FROM base
+FROM base as runner
 
 ENV NODE_ENV=production
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-USER nextjs
-
 COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=build /app/.next ./.next
 COPY --from=build /app/package.json ./package.json
 # COPY --from=build /app/public/ ./public  //dont have a public dir so fails, will uncomment if neccesary in the future.
 
-EXPOSE 3000
+EXPOSE 80
 
 CMD [ "pnpm", "start" ]

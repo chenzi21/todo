@@ -23,7 +23,7 @@ services:
   server:
     build:
       context: ../../backend/
-      dockerfile: ./development/Dockerfile.server
+      dockerfile: ../docker/development/Dockerfile.server
     container_name: server-dev
     ports:
       - '8080:8080'
@@ -43,10 +43,12 @@ services:
   app:
     build:
       context: ../../frontend/
-      dockerfile: ./development/Dockerfile.app
+      dockerfile: ../docker/development/Dockerfile.app
     container_name: app-dev
+    environment:
+      - PORT=80
     ports:
-      - '3000:3000'
+      - '80:80'
     depends_on:
       - server
     volumes:

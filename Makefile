@@ -14,7 +14,11 @@ start-development: ## Start the development docker container.
 
 .PHONY: build-production
 build-production: ## Build the production docker image.
-	DOCKER_BUILDKIT=1 docker compose -f docker/production/docker-compose.yml build
+	DOCKER_BUILDKIT=0 docker compose -f docker/production/docker-compose.yml build
+
+.PHONY: start-production
+start-production: ## Start the development docker container.
+	DOCKER_BUILDKIT=0 docker compose -f docker/production/docker-compose.yml up
 
 .PHONY: publish-to-ecr
 publish-to-ecr: ## Publish the production docker image.

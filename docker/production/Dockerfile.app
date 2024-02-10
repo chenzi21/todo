@@ -24,5 +24,6 @@ COPY --from=build /app/package.json ./package.json
 # COPY --from=build /app/public/ ./public  //dont have a public dir so fails, will uncomment if neccesary in the future.
 
 EXPOSE 80
+EXPOSE 443
 
 CMD [ "pnpm", "start" ]

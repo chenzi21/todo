@@ -25,4 +25,7 @@ docker/**/mysql-scripts
 backend/main
 
 # ssl certificates
-certs
+certificates
+
+#
+start_services.sh

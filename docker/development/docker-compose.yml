@@ -47,6 +47,8 @@ services:
     container_name: app-dev
     environment:
       - PORT=80
+      - SSL_KEY_PATH=certificates/localhost-key.pem
+      - SSL_CERT_PATH=certificates/localhost.pem
     ports:
       - '80:80'
       - '443:443'

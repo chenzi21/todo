@@ -8,14 +8,12 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-const privateKeyPath = "certificates/localhost-key.pem";
-const certificatePath = "certificates/localhost.pem";
 
 const port = process.env.PORT || 80;
 
 const httpsOptions = {
-    key: readFileSync(privateKeyPath),
-    cert: readFileSync(certificatePath),
+    key: readFileSync(process.env.SSL_KEY_PATH),
+    cert: readFileSync(process.env.SSL_CERT_PATH),
 };
 
 const HTTPS_SERVER = createServer(httpsOptions, (req, res) => {

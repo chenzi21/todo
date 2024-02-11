@@ -17,14 +17,14 @@ async function setSessionCookie(response: Response) {
         const cookieStore = cookies();
 
         cookieStore.set("session", body.sessionId, {
-            httpOnly: true,
-            secure: true,
+            httpOnly: process.env.NODE_ENV === 'production',
+            secure: process.env.NODE_ENV === 'production',
+            domain: process.env.NODE_ENV === "production" ? "chenzadik.com" : "localhost",
             name: "session",
-            sameSite: "strict",
+            sameSite: "none",
+            path: "/",
             maxAge: 86000
         });
-
-        return;
     } else {
         throw new Error("Failed to set cookie, check sessionId in response body");
     }

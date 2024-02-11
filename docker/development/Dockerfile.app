@@ -15,5 +15,6 @@ COPY --from=installer ./app ./
 COPY . .
 
 EXPOSE 80
+EXPOSE 443
 
 CMD ["npm", "run", "dev"]

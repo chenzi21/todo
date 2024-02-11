@@ -1,0 +1,4 @@
+sudo dnf update
+sudo dnf install -y certbot
+sudo systemctl start certbot-renew.timer
+sudo certbot certonly --standalone

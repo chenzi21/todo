@@ -2,8 +2,9 @@ import { cookies } from "next/headers";
 
 export default async function FetchWithCookies(url: string, fetchOptions?: RequestInit | undefined) {
     const Cookie = cookies().toString();
+
     try {
-        return fetch(url, {
+        return fetch(`http://server:8080/${url}`, {
             ...fetchOptions,
             headers: {
                 Cookie,

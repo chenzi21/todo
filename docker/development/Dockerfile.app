@@ -1,4 +1,4 @@
-FROM node:18-alpine AS installer
+FROM node:lts-slim AS installer
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm && \
     pnpm install
 
-FROM node:18-alpine as runner
+FROM node:lts-slim as runner
 
 WORKDIR /app
 

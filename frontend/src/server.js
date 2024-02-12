@@ -22,7 +22,6 @@ const HTTPS_SERVER = createServer(httpsOptions, (req, res) => {
 })
 
 const HTTP_SERVER = createHTTPServer((req, res) => {
-    console.log("lol")
     res.writeHead(301, { Location: new URL(req.url, "https://" + req.headers.host) })
     return res.end()
 })

@@ -8,7 +8,7 @@ export async function addTodo(formValues: Inputs) {
     "use server";
 
     try {
-        FetchWithCookies("http://localhost:8080/addTodo",
+        FetchWithCookies("addTodo",
             {
                 method: "POST",
                 body: JSON.stringify({
@@ -27,7 +27,7 @@ export async function finishTodos(ids: number[]) {
     "use server";
 
     try {
-        FetchWithCookies("http://localhost:8080/finishTodos",
+        FetchWithCookies("finishTodos",
             {
                 method: "POST",
                 body: JSON.stringify({ ids }),
@@ -42,7 +42,7 @@ export async function deleteTodo(id: number) {
     "use server";
 
     try {
-        FetchWithCookies("http://localhost:8080/deleteTodo",
+        FetchWithCookies("deleteTodo",
             {
                 method: "POST",
                 body: JSON.stringify({ id }),

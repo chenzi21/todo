@@ -34,7 +34,7 @@ export async function createUser(user: User) {
     "use server";
 
     try {
-        const response = await FetchWithCookies("http://localhost:8080/createUser",
+        const response = await FetchWithCookies("createUser",
             {
                 method: "POST",
                 body: JSON.stringify(user),
@@ -43,7 +43,8 @@ export async function createUser(user: User) {
 
         setSessionCookie(response);
     } catch (e: any) {
-        throw new Error(e)
+        console.log(e);
+        throw new Error(e);
     }
 }
 
@@ -51,7 +52,7 @@ export async function authenticateUser(user: User) {
     "use server";
 
     try {
-        const response = await FetchWithCookies("http://localhost:8080/authenticateUser",
+        const response = await FetchWithCookies("authenticateUser",
             {
                 method: "POST",
                 body: JSON.stringify(user),
@@ -60,6 +61,7 @@ export async function authenticateUser(user: User) {
 
         setSessionCookie(response);
     } catch (e: any) {
-        throw new Error(e)
+        console.log(e);
+        throw new Error(e);
     }
 }

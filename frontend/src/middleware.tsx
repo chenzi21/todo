@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getIsAuthenticated } from "./libs/getIsAuthenticated";
 
-export default function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith("/_next")) {
         return NextResponse.next();
     }
 
-    const isAuthenticated = getIsAuthenticated(request);
+    const isAuthenticated = await getIsAuthenticated(request);
 
     if (
         !isAuthenticated &&

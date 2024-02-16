@@ -1,10 +1,10 @@
 "use server";
 
-import { Inputs } from "@/components/addTodo/ToDoForm";
 import CDate from "./CDate";
 import FetchWithCookies from "./extendedFetch";
+import { TodoInputs } from "./types/todo";
 
-export async function addTodo(formValues: Inputs) {
+export async function addTodo(formValues: TodoInputs) {
     "use server";
 
     try {
@@ -13,7 +13,7 @@ export async function addTodo(formValues: Inputs) {
                 method: "POST",
                 body: JSON.stringify({
                     todo: formValues.todo,
-                    urgency: Number(formValues.urgency),
+                    urgency: formValues.urgency,
                     date: new CDate(formValues.date).toDateTime(),
                 }),
                 cache: "no-store",
@@ -48,6 +48,19 @@ export async function deleteTodo(id: number) {
                 body: JSON.stringify({ id }),
                 cache: "no-store",
             });
+    } catch (e: any) {
+        throw new Error(e)
+    }
+}
+
+export async function getTodos() {
+    "use server";
+
+    try {
+        return FetchWithCookies("getTodos", {
+            method: "GET",
+            cache: "no-store",
+        }).then((data) => data.json());
     } catch (e: any) {
         throw new Error(e)
     }

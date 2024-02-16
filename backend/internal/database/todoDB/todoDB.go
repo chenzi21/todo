@@ -9,7 +9,7 @@ import (
 type AddToDoSchema struct {
 	Todo    string `json:"todo"`
 	Date    string `json:"date"`
-	Urgency int    `json:"urgency"`
+	Urgency string    `json:"urgency"`
 }
 
 type ToDo struct {
@@ -64,7 +64,7 @@ func MarkToDosAsDone(args MarkToDosAsDoneSchema) error {
 }
 
 func GetAllToDos(userId string) ([]ToDo, error) {
-	rows, err := dbVar.DBcon.Query("SELECT id, todo, DATE_FORMAT(date, '%M %d %Y %H:%i') as date, urgency, is_done FROM todos WHERE userId = ? AND is_deleted = 0 ORDER BY id DESC;", userId)
+	rows, err := dbVar.DBcon.Query("SELECT id, todo, DATE_FORMAT(date, '%Y-%m-%dT%TZ') as date, urgency, is_done FROM todos WHERE userId = ? AND is_deleted = 0 ORDER BY id DESC;", userId)
 
 	if err != nil {
 		log.Panic(err)

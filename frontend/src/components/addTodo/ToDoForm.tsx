@@ -6,37 +6,49 @@ import ToDoDatePicker from "../inputs/DateTimePicker";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { addTodo } from "@/libs/todoDBActions";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cn } from "@/lib/utils";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { CheckIcon } from "lucide-react";
+import { Command, CommandGroup, CommandItem } from "../ui/command";
+import { TodoInputs } from "@/libs/types/todo";
 
-export type Inputs = {
-    todo: string;
-    date: CDate;
-    urgency: number;
-};
+const urgencyList = [
+    { label: "very-low", value: "very-low" },
+    { label: "low", value: "low" },
+    { label: "medium", value: "medium" },
+    { label: "high", value: "high" },
+    { label: "very-high", value: "very-high" },
+] as const;
 
 const initialState = {
     todo: "",
-    date: new CDate(),
-    urgency: 1,
-} as const;
+    date: undefined,
+    urgency: "low",
+};
 
 export default function ToDoFrom() {
     const router = useRouter();
-    const form = useForm<Inputs>({
+
+    const form = useForm<TodoInputs & { date: CDate | undefined }>({
         defaultValues: initialState,
         shouldUseNativeValidation: true,
     });
+
+    useEffect(() => {
+        form.setValue("date", new CDate());
+    }, []);
 
     const handleSubmit = useCallback(() => {
         const formValues = form.getValues();
@@ -49,7 +61,7 @@ export default function ToDoFrom() {
             });
             return;
         }
-        form.reset(initialState);
+        form.reset({ ...initialState, date: new CDate() });
         toast("To Do has Succesfully Created", {
             description: `To Do was Created for ${new CDate(
                 formValues.date
@@ -62,7 +74,7 @@ export default function ToDoFrom() {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(handleSubmit)}
-                className="flex flex-col gap-2"
+                className="flex flex-col gap-6"
             >
                 <FormField
                     control={form.control}
@@ -82,9 +94,6 @@ export default function ToDoFrom() {
                                     type="text"
                                 />
                             </FormControl>
-                            <FormDescription>
-                                a Text Input for Your To Do Item
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -105,9 +114,6 @@ export default function ToDoFrom() {
                                     type="date"
                                 />
                             </FormControl>
-                            <FormDescription>
-                                a Date Input for your To Do Item
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -119,15 +125,60 @@ export default function ToDoFrom() {
                         <FormItem className="flex flex-col">
                             <FormLabel>Urgency</FormLabel>
                             <FormControl>
-                                <Input
-                                    {...field}
-                                    name="urgency"
-                                    type="number"
-                                />
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant="outline"
+                                                role="combobox"
+                                                className={cn(
+                                                    "justify-between",
+                                                    !field.value &&
+                                                        "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value
+                                                    ? urgencyList.find(
+                                                          (urgency) =>
+                                                              urgency.value ===
+                                                              field.value
+                                                      )?.label
+                                                    : "Select language"}
+                                                <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent align="center">
+                                        <Command>
+                                            <CommandGroup>
+                                                {urgencyList.map((urgency) => (
+                                                    <CommandItem
+                                                        value={urgency.label}
+                                                        key={urgency.value}
+                                                        onSelect={() => {
+                                                            form.setValue(
+                                                                "urgency",
+                                                                urgency.value
+                                                            );
+                                                        }}
+                                                    >
+                                                        {urgency.label}
+                                                        <CheckIcon
+                                                            className={cn(
+                                                                "ml-auto h-4 w-4",
+                                                                urgency.value ===
+                                                                    field.value
+                                                                    ? "opacity-100"
+                                                                    : "opacity-0"
+                                                            )}
+                                                        />
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
                             </FormControl>
-                            <FormDescription>
-                                an Input for the Urgency of your To Do Item
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}

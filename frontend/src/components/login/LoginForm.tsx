@@ -1,14 +1,6 @@
 "use client";
 
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -16,14 +8,9 @@ import Link from "next/link";
 import UserNameInput from "../inputs/UserNameInput";
 import PasswordInput from "../inputs/PasswordInput";
 import { useRouter } from "next/navigation";
-import { Input } from "../ui/input";
-import { BaseSyntheticEvent, FormEvent, useCallback } from "react";
+import { BaseSyntheticEvent, useCallback } from "react";
 import { User } from "@/libs/usersDBActions";
-
-export type Inputs = {
-    username: string;
-    password: string;
-};
+import { UserLoginInputs } from "@/libs/types/user";
 
 const initialState = {
     username: "",
@@ -36,14 +23,14 @@ type Props = {
 
 export default function LoginForm({ handleSubmit }: Props) {
     const router = useRouter();
-    const form = useForm<Inputs>({
+    const form = useForm<UserLoginInputs>({
         defaultValues: initialState,
         shouldUseNativeValidation: true,
     });
 
     const onSubmit = useCallback(
         async (
-            inputs: Inputs,
+            inputs: UserLoginInputs,
             e?: BaseSyntheticEvent<object, any, any> | undefined
         ) => {
             e?.preventDefault();

@@ -4,7 +4,8 @@ services:
   mysql:
     image: 705252976650.dkr.ecr.il-central-1.amazonaws.com/todo-app:db-prod
     build:
-        dockerfile: Dockerfile.db
+        dockerfile: production/Dockerfile.db
+        context: ../
     container_name: db-prod
     restart: always
     environment:
@@ -18,7 +19,7 @@ services:
       - db_user
       - db_password
     volumes:
-      - ./mysql-scripts:/docker-entrypoint-initdb.d/
+      - ../mysql-scripts:/docker-entrypoint-initdb.d/
       - mysql-data:/var/lib/mysql
 
   server:

@@ -1,6 +1,6 @@
 .PHONY: build-development
 build-development: ## Build the development docker image.
-	DOCKER_BUILDKIT=0 docker compose -f docker/development/docker-compose.yml build
+	DOCKER_BUILDKIT=1 docker compose -f docker/development/docker-compose.yml build
 
 .PHONY: start-development
 start-development: ## Start the development docker container.
@@ -14,7 +14,7 @@ start-development: ## Start the development docker container.
 
 .PHONY: build-production
 build-production: ## Build the production docker image.
-	DOCKER_BUILDKIT=0 docker compose -f docker/production/docker-compose.yml build
+	DOCKER_BUILDKIT=1 docker compose -f docker/production/docker-compose.yml build
 
 .PHONY: start-production
 start-production: ## Start the development docker container.

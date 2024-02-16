@@ -1,5 +1,6 @@
 # project modules
 **/node_modules/
+frontend/pnpm-lock.yaml
 
 # dotenv environment variable files
 .env
@@ -29,3 +30,6 @@ certificates
 
 #
 start_services.sh
+
+#icons
+**/favicon.ico

@@ -19,6 +19,10 @@ type UserAuthenticationReturnValue struct {
 	UserId string
 }
 
+type SessionId struct {
+	SessionId any `json:"sessionId"`
+}
+
 func CreateUser(args UserSchema) (string, error) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(args.Password), 8)
 
@@ -59,4 +63,15 @@ func AuthenticateUser(args UserSchema) (string, error) {
 	}
 
 	return UserId, bcrypt.CompareHashAndPassword([]byte(Password), []byte(args.Password))
+}
+
+func AuthenticateSession(args SessionId) (error) {
+	var isValid int
+	err := dbVar.DBcon.QueryRow("SELECT 1 FROM sessions WHERE id = ?;", args.SessionId).Scan(&isValid)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

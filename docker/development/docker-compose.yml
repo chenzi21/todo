@@ -3,7 +3,8 @@ version: '3'
 services:
   mysql:
     build:
-        dockerfile: Dockerfile.db
+        dockerfile: development/Dockerfile.db
+        context: ../
     container_name: mysql-dev
     restart: always
     environment:
@@ -17,7 +18,7 @@ services:
       - db_user
       - db_password
     volumes:
-      - ./mysql-scripts:/docker-entrypoint-initdb.d/
+      - ../mysql-scripts:/docker-entrypoint-initdb.d/
       - mysql-data:/var/lib/mysql
 
   server:

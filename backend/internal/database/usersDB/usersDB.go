@@ -57,9 +57,9 @@ func AuthenticateUser(args UserSchema) (string, error) {
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return "", errors.New("User Doesn't Exist");
+			return "", errors.New("user Doesn't Exist");
 		}
-		return "", errors.New("Internal Server Error");
+		return "", errors.New("internal Server Error");
 	}
 
 	return UserId, bcrypt.CompareHashAndPassword([]byte(Password), []byte(args.Password))

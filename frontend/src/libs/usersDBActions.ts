@@ -63,8 +63,6 @@ export async function authenticateUser(user: User) {
                 cache: "no-store",
             });
 
-        console.dir(response);
-
         setSessionCookie(response);
     } catch (e: any) {
         console.log(e);

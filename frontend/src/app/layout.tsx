@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     title: "To Do App",
     description:
         "a Fun To Do App, experimenting with nextjs, golang, mysql and docker",
+    icons: { icon: "/favicon.ico", href: "/favicon.ico" },
 };
 
 export default function RootLayout({
@@ -22,7 +23,7 @@ export default function RootLayout({
             <body className={inter.className}>
                 <Navbar />
                 {children}
-                <Toaster />
+                <Toaster position="top-center" />
             </body>
         </html>
     );

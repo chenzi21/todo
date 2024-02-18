@@ -16,15 +16,19 @@ async function setSessionCookie(response: Response) {
     if ("sessionId" in body && typeof body.sessionId === "string" && body.sessionId.length > 0) {
         const cookieStore = cookies();
 
-        cookieStore.set("session", body.sessionId, {
-            httpOnly: process.env.NODE_ENV === 'production',
-            secure: process.env.NODE_ENV === 'production',
-            domain: process.env.NODE_ENV === "production" ? "chenzadik.com" : "localhost",
-            name: "session",
-            sameSite: "none",
-            path: "/",
-            maxAge: 86000
-        });
+        await new Promise<void>((res, _) => {
+            cookieStore.set("session", body.sessionId, {
+                httpOnly: process.env.NODE_ENV === 'production',
+                secure: process.env.NODE_ENV === 'production',
+                domain: process.env.NODE_ENV === "production" ? "chenzadik.com" : "localhost",
+                name: "session",
+                sameSite: "none",
+                path: "/",
+                maxAge: 86000
+            });
+            res();
+        })
+
     } else {
         throw new Error("Failed to set cookie, check sessionId in response body");
     }

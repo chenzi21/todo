@@ -25,7 +25,12 @@ func Init() {
 
 		if err != nil {
 			log.Println(err)
-			w.WriteHeader(http.StatusUnauthorized)
+			log.Println("auth:", err.Error())
+			if (err.Error() == "user Doesn't Exist") {
+				w.WriteHeader(http.StatusUnauthorized)
+			} else {
+				w.WriteHeader(http.StatusInternalServerError)
+			}
 			return
 		}
 

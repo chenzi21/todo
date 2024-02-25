@@ -1,13 +1,10 @@
 pipeline {
-
     agent any
-
+    
     stages {
-
-        stage("test") {
-
+        stage("build docker images") {
             steps {
-                echo "test ok"
+                docker compose -f docker/production/docker-compose.yml build
             }
         }
     }

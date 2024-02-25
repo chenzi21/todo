@@ -17,33 +17,33 @@ pipeline {
     stages {
         stage("Building project docker images") {
             steps {
-                sh 'docker compose -f docker/production/docker-compose.yml build'
+                sh('docker compose -f docker/production/docker-compose.yml build')
             }
         }
 
         stage('Logging into AWS ECR') {
             steps {
-                sh "${AWS_ECR_LOGIN}"
+                sh('$AWS_ECR_LOGIN')
             }
         }  
 
         stage("Pushing to AWS ECR") {
             steps {
-                sh "docker push ${REPOSITORY_URI}:app-prod"
-                sh "docker push ${REPOSITORY_URI}:server-prod"
-                sh "docker push ${REPOSITORY_URI}:db-prod"
+                sh('docker push $REPOSITORY_URI:app-prod')
+                sh('docker push $REPOSITORY_URI:server-prod')
+                sh('docker push $REPOSITORY_URI:db-prod')
             }
         }
 
         stage("SSH into EC2 INSTANCE") {
             steps {
-                sh "${SSH_COMMAND} ${AWS_ECR_LOGIN}"
-                sh "${SSH_COMMAND} docker container rm --force $(docker container ps -aq)"
-                sh "${SSH_COMMAND} docker image prune --force"
-                sh "${SSH_COMMAND} docker pull ${REPOSITORY_URI}:app-prod"
-                sh "${SSH_COMMAND} docker pull ${REPOSITORY_URI}:server-prod"
-                sh "${SSH_COMMAND} docker pull ${REPOSITORY_URI}:db-prod"
-                sh "${SSH_COMMAND} docker-compose docker_compose/docker-compose.yml up -d"
+                sh('$SSH_COMMAND $AWS_ECR_LOGIN')
+                sh('$SSH_COMMAND docker container rm --force $(docker container ps -aq)')
+                sh('$SSH_COMMAND docker image prune --force')
+                sh('$SSH_COMMAND docker pull $REPOSITORY_URI:app-prod')
+                sh('$SSH_COMMAND docker pull $REPOSITORY_URI:server-prod')
+                sh('$SSH_COMMAND docker pull $REPOSITORY_URI:db-prod')
+                sh('$SSH_COMMAND docker-compose docker_compose/docker-compose.yml up -d')
             }
         }
     }

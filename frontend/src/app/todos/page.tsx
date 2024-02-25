@@ -1,7 +1,7 @@
 "use server";
 
 import TodosTable from "@/components/todosPage/todosTable";
-import { getTodos } from "@/libs/todoDBActions";
+import { getTodos } from "@/libs/dbActions/todo";
 import { Suspense } from "react";
 
 export default async function Home() {
@@ -9,7 +9,7 @@ export default async function Home() {
 
     return (
         <main
-            className="flex min-h-screen flex-col items-center justify-between p-24"
+            className="flex min-h-screen flex-col items-center justify-between p-[10vw]"
             style={{ minHeight: "100%" }}
         >
             <Suspense key={"utc"} fallback={<h2>Loading...</h2>}>

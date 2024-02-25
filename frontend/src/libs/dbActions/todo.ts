@@ -1,8 +1,8 @@
 "use server";
 
-import CDate from "./CDate";
-import FetchWithCookies from "./extendedFetch";
-import { TodoInputs } from "./types/todo";
+import CDate from "../CDate";
+import FetchWithCookies from "../fetchUtils";
+import { TodoInputs } from "../types/todo";
 
 export async function addTodo(formValues: TodoInputs) {
     "use server";

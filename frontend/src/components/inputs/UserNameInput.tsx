@@ -7,7 +7,7 @@ import {
     FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { BasicInputProps } from "@/libs/inputs.t";
+import { BasicInputProps } from "@/libs/types/inputs";
 
 export default function UserNameInput({
     form,

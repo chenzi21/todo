@@ -1,7 +1,7 @@
 "use server";
 
 import LoginForm from "@/components/login/LoginForm";
-import { authenticateUser } from "@/libs/usersDBActions";
+import { authenticateUser } from "@/libs/dbActions/users";
 import { Suspense } from "react";
 
 export default async function Login() {

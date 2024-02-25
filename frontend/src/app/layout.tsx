@@ -23,7 +23,11 @@ export default function RootLayout({
             <body className={inter.className}>
                 <Navbar />
                 {children}
-                <Toaster position="top-center" />
+                <Toaster
+                    position="top-center"
+                    richColors
+                    pauseWhenPageIsHidden
+                />
             </body>
         </html>
     );

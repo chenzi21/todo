@@ -1,6 +1,6 @@
 "use server";
 import { NextRequest } from "next/server";
-import FetchWithCookies from "./extendedFetch";
+import FetchWithCookies from "./fetchUtils";
 
 export async function getIsAuthenticated(request: NextRequest) {
     "use server";

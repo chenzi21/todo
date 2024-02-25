@@ -15,4 +15,10 @@ export default async function FetchWithCookies(url: string, fetchOptions?: Reque
         console.log(e);
         return new Response(null, { status: e.code ?? 500, statusText: e.message ?? "Internal Server Error" })
     }
-}
+};
+
+export async function validateAuthResponse(res: Response) {
+    if (res.status === 200) return true
+
+    if (res.status === 401) throw new Error("unauthenticated")
+};

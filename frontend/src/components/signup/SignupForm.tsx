@@ -3,12 +3,13 @@
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import UserNameInput from "../inputs/UserNameInput";
 import PasswordInput from "../inputs/PasswordInput";
 import { useRouter } from "next/navigation";
 import { BaseSyntheticEvent } from "react";
-import { User } from "@/libs/usersDBActions";
+import { User } from "@/libs/dbActions/users";
+import { modularToast } from "@/libs/toastUtils";
+import { toast } from "sonner";
 
 export type Inputs = User & {
     confirmPassword: string;
@@ -42,13 +43,13 @@ export default function SignUpForm({ handleSubmit }: Props) {
                 password: inputs.password,
                 username: inputs.username,
             });
-            toast("Authentication was Successful", {
+            modularToast("Authentication was Successful", {
                 description: "Great to See You again!",
             });
             form.reset(initialState);
             router.push("/todos");
         } catch (e: any) {
-            toast("Authentication Failed", {
+            toast.error("Authentication Failed", {
                 description: "if You are Not a Registered user Please Sign up.",
             });
             form.reset(initialState);
@@ -60,7 +61,7 @@ export default function SignUpForm({ handleSubmit }: Props) {
         e?: BaseSyntheticEvent<object, any, any> | undefined
     ) {
         e?.preventDefault();
-        toast("Submittion Failed", {
+        toast.error("Submittion Failed", {
             description: "invalid inputs, please adhere to the input rules.",
         });
     }

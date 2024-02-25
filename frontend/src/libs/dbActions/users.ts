@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import FetchWithCookies from "./extendedFetch";
+import FetchWithCookies from "../fetchUtils";
 
 export type User = {
     username: string;
@@ -28,7 +28,6 @@ async function setSessionCookie(response: Response) {
             });
             res();
         })
-
     } else {
         throw new Error("Failed to set cookie, check sessionId in response body");
     }

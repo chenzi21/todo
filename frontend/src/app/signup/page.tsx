@@ -1,7 +1,7 @@
 "use server";
 
 import SignUpForm from "@/components/signup/SignupForm";
-import { createUser } from "@/libs/usersDBActions";
+import { createUser } from "@/libs/dbActions/users";
 import { Suspense } from "react";
 
 export default async function Signup() {

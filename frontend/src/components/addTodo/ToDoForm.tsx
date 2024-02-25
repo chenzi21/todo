@@ -15,14 +15,15 @@ import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { addTodo } from "@/libs/todoDBActions";
+import { addTodo } from "@/libs/dbActions/todo";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { cn } from "@/lib/utils";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { CheckIcon } from "lucide-react";
 import { Command, CommandGroup, CommandItem } from "../ui/command";
 import { TodoInputs } from "@/libs/types/todo";
+import { modularToast } from "@/libs/toastUtils";
+import { toast } from "sonner";
 
 const urgencyList = [
     { label: "very-low", value: "very-low" },
@@ -56,18 +57,18 @@ export default function ToDoFrom() {
             addTodo(formValues);
         } catch (e: any) {
             console.log(e);
-            toast("To Do failed to Create", {
+            toast.error("To Do failed to Create", {
                 description: "Please Check Inputs and Try Again",
             });
             return;
         }
         form.reset({ ...initialState, date: new CDate() });
-        toast("To Do has Succesfully Created", {
+        modularToast("To Do has Succesfully Created", {
             description: `To Do was Created for ${new CDate(
                 formValues.date
             ).toDateTime()}`,
         });
-        router.refresh();
+        router.push("/todos");
     }, []);
 
     return (

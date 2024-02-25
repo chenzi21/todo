@@ -37,14 +37,12 @@ pipeline {
 
         stage("SSH into EC2 INSTANCE") {
             steps {
-                sh "${SSH_COMMAND}"
-                sh "${AWS_ECR_LOGIN}"
-                sh "docker container rm \$(docker container ps -aq) --force || true"
-                sh "docker image prune --force\$(docker container ps -aq) || true"
-                sh "docker pull ${REPOSITORY_URI}:app-prod"
-                sh "docker pull ${REPOSITORY_URI}:server-prod"
-                sh "docker pull ${REPOSITORY_URI}:db-prod"
-                sh "docker-compose -f /home/${EC2_USER}/docker_compose/docker-compose.yml up -d"
+                sh "${SSH_COMMAND} docker container rm \$(docker container ps -aq) --force || true"
+                sh "${SSH_COMMAND} docker image prune --force\$(docker container ps -aq) || true"
+                sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:app-prod"
+                sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:server-prod"
+                sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:db-prod"
+                sh "${SSH_COMMAND} docker-compose -f /home/${EC2_USER}/docker_compose/docker-compose.yml up -d"
             }
         }
     }

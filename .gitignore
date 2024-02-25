@@ -27,6 +27,7 @@ backend/main
 
 # ssl certificates
 certificates
+*.pem
 
 #
 start_services.sh

@@ -38,7 +38,7 @@ pipeline {
         stage("SSH into EC2 INSTANCE") {
             steps {
                 sh "${SSH_COMMAND} docker container rm \$(docker container ps -aq) --force || true"
-                sh "${SSH_COMMAND} docker image prune --force\$(docker container ps -aq) || true"
+                sh "${SSH_COMMAND} docker image prune --force || true"
                 sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:app-prod"
                 sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:server-prod"
                 sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:db-prod"

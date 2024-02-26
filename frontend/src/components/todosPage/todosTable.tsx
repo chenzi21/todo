@@ -150,9 +150,7 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => {
 export default function TodosTable({ data }: DataTableProps<Todo>) {
     const router = useRouter();
     const [rowSelection, setRowSelection] = useState({});
-    let isMobile = useIsMobile();
-    console.log(isMobile);
-    isMobile = true;
+    const isMobile = useIsMobile();
     const columns = useColumns(router);
 
     const table = useReactTable({

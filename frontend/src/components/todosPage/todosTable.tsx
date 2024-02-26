@@ -89,7 +89,8 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => {
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
                             className="cursor-pointer"
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.stopPropagation();
                                 try {
                                     deleteToDo(row.original.id);
                                     router.refresh();
@@ -251,7 +252,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                 </Table>
             </div>
             <div className="flex items-center box-border justify-between space-x-2 py-4 min-h-20">
-                {!isMobile && isMobile !== undefined && (
+                {isMobile == false && (
                     <div className="text-sm text-muted-foreground p-1">
                         {table.getFilteredSelectedRowModel().rows.length} of{" "}
                         {table.getFilteredRowModel().rows.length} row(s)
@@ -287,7 +288,11 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                         </Button>
                     </div>
                 )}
-                <div className="space-x-2 ms-auto flex justify-between w-[100%]">
+                <div
+                    className={`space-x-2 ms-auto flex ${
+                        isMobile ? "justify-between w-[100%]" : ""
+                    }`}
+                >
                     <Button
                         variant="outline"
                         size="sm"

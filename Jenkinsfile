@@ -35,13 +35,24 @@ pipeline {
             }
         }
 
-        stage("SSH into EC2 INSTANCE") {
+        stage("Removing docker data in EC2 INSTANCE") {
             steps {
-                sh "${SSH_COMMAND} docker container rm \$(docker container ps -aq) --force || true"
+                sh "${SSH_COMMAND} docker container rm db-prod server-prod app-prod --force || true"
                 sh "${SSH_COMMAND} docker image prune --force || true"
+            }
+        }
+
+         stage("Pulling LTS images from AWS ECR") {
+            steps {
                 sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:app-prod"
                 sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:server-prod"
                 sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:db-prod"
+                sh "${SSH_COMMAND} docker-compose -f /home/${EC2_USER}/docker_compose/docker-compose.yml up -d"
+            }
+        }
+
+        stage("Running docker containers in EC2 INSTANCE") {
+            steps {
                 sh "${SSH_COMMAND} docker-compose -f /home/${EC2_USER}/docker_compose/docker-compose.yml up -d"
             }
         }

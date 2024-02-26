@@ -7,7 +7,7 @@ pipeline {
         IMAGE_REPO_NAME="todo-app"
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
         AWS_ECR_LOGIN = "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI}"
-        SSH_PEM_FILE = "/ec2_ssh.pem"
+        SSH_PEM_FILE = "/home/ec2-user/ec2_ssh.pem"
         EC2_USER = "ec2-user"
         EC2_DOMAIN = "51-16-134-73"
         EC2_SSH_URL = "${EC2_USER}@ec2-${EC2_DOMAIN}.${AWS_DEFAULT_REGION}.compute.amazonaws.com"

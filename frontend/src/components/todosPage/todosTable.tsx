@@ -36,8 +36,7 @@ import { Todo } from "@/libs/types/todo";
 import { modularToast } from "@/libs/toastUtils";
 import useIsMobile from "@/libs/useIsMobile";
 import { toast } from "sonner";
-import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
-import CDate from "@/libs/CDate";
+import { Drawer, DrawerTrigger } from "../ui/drawer";
 import TodoDrawer from "./TodoDrawer";
 
 interface DataTableProps<TData> {
@@ -151,7 +150,9 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => {
 export default function TodosTable({ data }: DataTableProps<Todo>) {
     const router = useRouter();
     const [rowSelection, setRowSelection] = useState({});
-    const isMobile = useIsMobile();
+    let isMobile = useIsMobile();
+    console.log(isMobile);
+    isMobile = true;
     const columns = useColumns(router);
 
     const table = useReactTable({

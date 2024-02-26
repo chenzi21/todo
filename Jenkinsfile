@@ -38,7 +38,7 @@ pipeline {
         stage("Removing docker data in EC2 INSTANCE") {
             steps {
                 sh "${SSH_COMMAND} docker container rm db-prod server-prod app-prod --force || true"
-                sh "${SSH_COMMAND} docker image prune --force || true"
+                sh "${SSH_COMMAND} docker image rm ${REPOSITORY_URI}:app-prod ${REPOSITORY_URI}:server-prod ${REPOSITORY_URI}:db-prod --force || true"
             }
         }
 

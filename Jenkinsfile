@@ -11,7 +11,7 @@ pipeline {
         SSH_PEM_FILE = "/var/lib/jenkins/secrets/ec2_ssh.pem"
         EC2_USER = "ec2-user"
         EC2_DOMAIN = "51-16-134-73"
-        EC2_SSH_URL = "ec2-${EC2_DOMAIN}.${AWS_DEFAULT_REGION}.compute.amazonaws.com"
+        EC2_SSH_URL = "ec2-user@${EC2_DOMAIN}.${AWS_DEFAULT_REGION}.compute.amazonaws.com"
         SSH_COMMAND = "ssh -i ${SSH_PEM_FILE} ${EC2_SSH_URL}"
     }
     

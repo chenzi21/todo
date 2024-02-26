@@ -17,7 +17,7 @@ pipeline {
     stages {
         stage("Building project docker images") {
             steps {
-                sh 'docker compose -f docker/production/docker-compose.yml build --no-cache'
+                sh 'docker compose -f docker/production/docker-compose.yml build'
             }
         }
 

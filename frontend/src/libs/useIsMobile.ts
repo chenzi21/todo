@@ -5,7 +5,7 @@ export default function useIsMobile() {
 
     useEffect(() => {
         if (!isMobile) {
-            setIsMobile(!!window && "ontouchstart" in window);
+            setIsMobile(!!window && ("ontouchstart" in window));
         }
     }, []);
 

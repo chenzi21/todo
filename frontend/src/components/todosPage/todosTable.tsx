@@ -31,13 +31,14 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { finishTodos, deleteTodo } from "@/libs/dbActions/todo";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useEffect, useState } from "react";
-import CDate from "@/libs/CDate";
+import { useState } from "react";
 import { Todo } from "@/libs/types/todo";
 import { modularToast } from "@/libs/toastUtils";
 import useIsMobile from "@/libs/useIsMobile";
 import { toast } from "sonner";
-import { DrawerTrigger } from "../ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
+import CDate from "@/libs/CDate";
+import TodoDrawer from "./TodoDrawer";
 
 interface DataTableProps<TData> {
     data: TData[];
@@ -48,7 +49,7 @@ const deleteToDo = (id: number) => {
         deleteTodo(id);
     } catch (e: any) {
         console.log(e);
-        modularToast("There Was an Error Deleting To Do", {
+        toast.error("There Was an Error Deleting To Do", {
             description: "Please Try Again Later",
             closeButton: true,
         });
@@ -62,32 +63,18 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => {
 
     const cols: ColumnDef<any, any>[] = [
         {
-            id: "select",
-            cell: ({ row }) => (
-                <Checkbox
-                    disabled={row.original.is_done}
-                    checked={!row.original.is_done && row.getIsSelected()}
-                    onCheckedChange={(value) => row.toggleSelected(!!value)}
-                    aria-label="Select row"
-                    className="block"
-                />
-            ),
-            enableSorting: false,
-            enableHiding: false,
-        },
-        {
-            accessorKey: "date",
-            header: "Date",
-        },
-        {
             accessorKey: "todo",
             header: "To Do",
             maxSize: 5,
             cell: ({ cell }) => (
-                <text className="block max-w-20 overflow-x-hidden text-ellipsis">
+                <p className="block max-w-24 overflow-x-hidden text-ellipsis">
                     {cell.renderValue()}
-                </text>
+                </p>
             ),
+        },
+        {
+            accessorKey: "date",
+            header: "Date",
         },
         {
             id: "actions",
@@ -121,10 +108,29 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => {
     ];
 
     if (isMobile !== undefined && !isMobile) {
-        cols.splice(1, 0, {
-            accessorKey: "id",
-            header: "ID",
-        });
+        cols.splice(
+            0,
+            0,
+            {
+                id: "select",
+                cell: ({ row }) => (
+                    <Checkbox
+                        onClick={(e) => e.stopPropagation()}
+                        disabled={row.original.is_done}
+                        checked={!row.original.is_done && row.getIsSelected()}
+                        onCheckedChange={(value) => row.toggleSelected(!!value)}
+                        aria-label="Select row"
+                        className="block"
+                    />
+                ),
+                enableSorting: false,
+                enableHiding: false,
+            },
+            {
+                accessorKey: "id",
+                header: "ID",
+            }
+        );
         cols.splice(
             4,
             0,
@@ -148,23 +154,8 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
     const isMobile = useIsMobile();
     const columns = useColumns(router);
 
-    // hate doing this, but currently the only workaround regarding dates mismatch between client and server.
-    const [formattedData, setFormattedData] = useState<Todo[]>(data);
-
-    // useEffect(
-    //     () =>
-    //         setFormattedData(
-    //             // @ts-ignore
-    //             data.map((todo: Todo) => ({
-    //                 ...todo,
-    //                 date: new CDate(todo.date).toLocaleString(),
-    //             }))
-    //         ),
-    //     [data]
-    // );
-
     const table = useReactTable({
-        data: formattedData,
+        data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -209,39 +200,43 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <DrawerTrigger asChild>
-                                    <TableRow
-                                        key={row.id}
-                                        data-state={
-                                            row.getIsSelected() && "selected"
-                                        }
-                                        // onClick={(e) => {
-                                        //     e.preventDefault();
-                                        //     e.stopPropagation();
-                                        // }}
-                                        className={
-                                            isMobile === undefined
-                                                ? "motion-safe:animate-pulse rounded-md bg-gray-900/10 dark:bg-gray-50/10"
-                                                : ""
-                                        }
-                                    >
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell
-                                                key={cell.id}
-                                                className={
-                                                    isMobile !== undefined
-                                                        ? ""
-                                                        : "opacity-0"
-                                                }
-                                            >
-                                                {flexRender(
-                                                    cell.column.columnDef.cell,
-                                                    cell.getContext()
-                                                )}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </DrawerTrigger>
+                                <Drawer key={row.id}>
+                                    <DrawerTrigger asChild>
+                                        <TableRow
+                                            key={row.id}
+                                            data-state={
+                                                row.getIsSelected() &&
+                                                "selected"
+                                            }
+                                            className={
+                                                isMobile === undefined
+                                                    ? "motion-safe:animate-pulse rounded-md bg-gray-900/10 dark:bg-gray-50/10"
+                                                    : ""
+                                            }
+                                        >
+                                            {row
+                                                .getVisibleCells()
+                                                .map((cell) => (
+                                                    <TableCell
+                                                        key={cell.id}
+                                                        className={
+                                                            isMobile !==
+                                                            undefined
+                                                                ? ""
+                                                                : "opacity-0"
+                                                        }
+                                                    >
+                                                        {flexRender(
+                                                            cell.column
+                                                                .columnDef.cell,
+                                                            cell.getContext()
+                                                        )}
+                                                    </TableCell>
+                                                ))}
+                                        </TableRow>
+                                    </DrawerTrigger>
+                                    <TodoDrawer todo={row.original} />
+                                </Drawer>
                             ))
                         ) : (
                             <TableRow>
@@ -257,14 +252,14 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                 </Table>
             </div>
             <div className="flex items-center box-border justify-between space-x-2 py-4 min-h-20">
-                {!isMobile && (
+                {!isMobile && isMobile !== undefined && (
                     <div className="text-sm text-muted-foreground p-1">
                         {table.getFilteredSelectedRowModel().rows.length} of{" "}
                         {table.getFilteredRowModel().rows.length} row(s)
                         selected.
                     </div>
                 )}
-                {Object.keys(rowSelection).length > 0 && (
+                {!isMobile && Object.keys(rowSelection).length > 0 && (
                     <div>
                         <Button
                             disabled={Object.keys(rowSelection).length == 0}
@@ -293,7 +288,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                         </Button>
                     </div>
                 )}
-                <div className="space-x-2 ms-auto">
+                <div className="space-x-2 ms-auto flex justify-between w-[100%]">
                     <Button
                         variant="outline"
                         size="sm"

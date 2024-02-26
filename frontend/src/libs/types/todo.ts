@@ -8,8 +8,8 @@ export type TodoInputs = {
 
 export type Todo = {
     id: number;
-    userId: string;
-    created_at: CDate;
+    // userId: string;
+    // created_at: CDate;
     is_done: boolean;
-    is_deleted: boolean;
+    // is_deleted: boolean;
 } & TodoInputs;

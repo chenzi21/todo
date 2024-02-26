@@ -252,7 +252,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                 </Table>
             </div>
             <div className="flex items-center box-border justify-between space-x-2 py-4 min-h-20">
-                {isMobile == false && (
+                {isMobile === false && (
                     <div className="text-sm text-muted-foreground p-1">
                         {table.getFilteredSelectedRowModel().rows.length} of{" "}
                         {table.getFilteredRowModel().rows.length} row(s)

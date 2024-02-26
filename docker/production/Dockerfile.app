@@ -6,16 +6,10 @@ WORKDIR /app
 COPY . .
 
 FROM base AS prod-deps
-RUN --mount=type=cache,id=pnmcache,target=/pnpm_store \
-  pnpm config set store-dir /pnpm_store && \
-  pnpm config set package-import-method copy && \
-  pnpm install --prefer-offline --ignore-scripts --prod --frozen-lockfile
+RUN pnpm install --prod
 
 FROM base AS build-deps
-RUN --mount=type=cache,id=pnmcache,target=/pnpm_store \
-  pnpm config set store-dir /pnpm_store && \
-  pnpm config set package-import-method copy && \
-  pnpm install --prefer-offline --ignore-scripts --frozen-lockfile
+RUN pnpm install
 
 FROM base as build
 

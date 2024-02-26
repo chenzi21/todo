@@ -47,7 +47,6 @@ pipeline {
                 sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:app-prod"
                 sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:server-prod"
                 sh "${SSH_COMMAND} ${AWS_ECR_LOGIN} && docker pull ${REPOSITORY_URI}:db-prod"
-                sh "${SSH_COMMAND} docker-compose -f /home/${EC2_USER}/docker_compose/docker-compose.yml up -d"
             }
         }
 

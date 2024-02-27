@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
     NavigationMenu,
     NavigationMenuItem,
-    NavigationMenuLink,
     NavigationMenuList,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
@@ -15,32 +14,28 @@ export default function Navbar() {
     const router = useRouter();
 
     return (
-        <NavigationMenu>
+        <NavigationMenu className="min-w-[100%] p-2 flex justify-start items-center bg-[#f8f8f8] shadow shadow-slate-300">
             <NavigationMenuList>
-                <NavigationMenuItem>
+                <NavigationMenuItem className={navigationMenuTriggerStyle()}>
                     <Link
                         href="/todos"
                         onClick={() => router.push("/todos")}
                         passHref
                     >
-                        <NavigationMenuLink
-                            className={navigationMenuTriggerStyle()}
-                        >
-                            To Do's
-                        </NavigationMenuLink>
+                        To Do's
                     </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                     <Link
                         href="/addToDo"
-                        onClick={() => router.push("/addToDo")}
+                        onClick={() => {
+                            console.log("pressed");
+                            router.push("/addToDo");
+                        }}
                         passHref
+                        className={navigationMenuTriggerStyle()}
                     >
-                        <NavigationMenuLink
-                            className={navigationMenuTriggerStyle()}
-                        >
-                            Add To Do
-                        </NavigationMenuLink>
+                        Add To Do
                     </Link>
                 </NavigationMenuItem>
             </NavigationMenuList>

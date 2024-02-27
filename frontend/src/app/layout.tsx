@@ -23,6 +23,12 @@ export default function RootLayout({
             <body className={inter.className}>
                 <Navbar />
                 {children}
+                <footer className="w-[100%] p-2 absolute left-0 bottom-0 flex justify-center items-center bg-[#f4f4f4] shadow shadow-slate-400">
+                    <small>
+                        &copy; Copyright {new Date().getFullYear()} Chen Zadik.
+                        All Rights Reserved
+                    </small>
+                </footer>
                 <Toaster
                     position="top-center"
                     richColors

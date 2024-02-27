@@ -41,7 +41,7 @@ export default function LoginForm({ handleSubmit }: Props) {
                     description: "Great to See You again!",
                 });
                 form.reset(initialState);
-                router.push("/todos");
+                router.replace("/todos");
             } catch (e: any) {
                 console.log(e);
                 toast.error("Authentication Failed", {

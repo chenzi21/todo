@@ -6,8 +6,6 @@ export async function getIsAuthenticated(request: NextRequest) {
     "use server";
     const sessionCookie = request.cookies.get("session");
 
-    console.log("sessionCookie", sessionCookie)
-
     if (!sessionCookie) return false;
 
     try {
@@ -18,8 +16,6 @@ export async function getIsAuthenticated(request: NextRequest) {
             }),
             cache: "no-store",
         })
-
-        console.log("res", response.ok, response.status)
 
         return response.ok;
     } catch (e: any) {

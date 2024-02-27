@@ -6,20 +6,7 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    console.log("-------------------------------------------------");
-
     const isAuthenticated = await getIsAuthenticated(request);
-
-    console.log("auth", isAuthenticated);
-
-    console.log(
-        "condition",
-        !isAuthenticated &&
-            !request.url.includes("/login") &&
-            !request.url.includes("/signup")
-    );
-
-    console.log(request.url);
 
     if (
         !isAuthenticated &&

@@ -19,6 +19,8 @@ export async function getIsAuthenticated(request: NextRequest) {
             cache: "no-store",
         })
 
+        console.log("res", response.ok, response.status)
+
         return response.ok;
     } catch (e: any) {
         console.log(e);

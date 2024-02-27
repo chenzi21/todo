@@ -56,7 +56,7 @@ pipeline {
     post {
         always {
             sh "docker builder prune --force"
-            sh "${SSH_COMMAND} docker image rm --force || true"
+            sh "${SSH_COMMAND} docker image prune --force || true"
         }
     }
 }

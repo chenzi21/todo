@@ -13,6 +13,8 @@ async function setSessionCookie(response: Response) {
 
     const body = await response.json();
 
+    console.log("body", body);
+
     if ("sessionId" in body && typeof body.sessionId === "string" && body.sessionId.length > 0) {
         const cookieStore = cookies();
 
@@ -26,6 +28,7 @@ async function setSessionCookie(response: Response) {
                 path: "/",
                 maxAge: 86000
             });
+            console.log("cookie set")
             res();
         })
     } else {

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import Navbar from "../components/mainLayout/Navbar";
 
-const inter = Inter({ subsets: ["latin"] });
+const font = Open_Sans({ weight: "500", subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "To Do App",
@@ -20,10 +20,10 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body className={font.className}>
                 <Navbar />
                 {children}
-                <footer className="w-[100%] p-2 absolute left-0 bottom-0 flex justify-center items-center bg-[#f4f4f4] shadow shadow-slate-400">
+                <footer className="w-[100%] p-2 fixed left-0 bottom-0 flex justify-center items-center bg-[#f4f4f4] shadow shadow-slate-400">
                     <small>
                         &copy; Copyright {new Date().getFullYear()} Chen Zadik.
                         All Rights Reserved

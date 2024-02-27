@@ -22,14 +22,9 @@ pipeline {
             }
         }
 
-        stage('Logging into AWS ECR') {
-            steps {
-                sh "${AWS_ECR_LOGIN}"
-            }
-        }  
-
         stage("Pushing to AWS ECR") {
             steps {
+                sh "${AWS_ECR_LOGIN}"
                 sh "docker push ${REGISTRY_URI}:app-prod"
                 sh "docker push ${REGISTRY_URI}:server-prod"
                 sh "docker push ${REGISTRY_URI}:db-prod"
@@ -56,6 +51,7 @@ pipeline {
     post {
         always {
             sh "docker builder prune --force"
+            sh "docker image prune --force"
             sh "${SSH_COMMAND} docker image prune --force || true"
         }
     }

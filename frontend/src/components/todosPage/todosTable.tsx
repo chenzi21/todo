@@ -66,7 +66,7 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => {
             header: "To Do",
             maxSize: 5,
             cell: ({ cell }) => (
-                <p className="block max-w-24 overflow-x-hidden text-ellipsis">
+                <p className="block max-w-24 max-h-6 overflow-x-hidden text-ellipsis">
                     {cell.renderValue()}
                 </p>
             ),
@@ -151,7 +151,9 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => {
 export default function TodosTable({ data }: DataTableProps<Todo>) {
     const router = useRouter();
     const [rowSelection, setRowSelection] = useState({});
+    const [pIndex, setPIndex] = useState<number>(0);
     const isMobile = useIsMobile();
+    const pageSize = isMobile === false ? 10 : 8;
     const columns = useColumns(router);
 
     const table = useReactTable({
@@ -164,6 +166,10 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
         onRowSelectionChange: setRowSelection,
         state: {
             rowSelection,
+            pagination: {
+                pageIndex: pIndex,
+                pageSize,
+            },
         },
     });
 
@@ -296,7 +302,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => table.previousPage()}
+                        onClick={() => setPIndex((prev) => prev - 1)}
                         disabled={!table.getCanPreviousPage()}
                     >
                         Previous
@@ -304,7 +310,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => table.nextPage()}
+                        onClick={() => setPIndex((prev) => prev + 1)}
                         disabled={!table.getCanNextPage()}
                     >
                         Next

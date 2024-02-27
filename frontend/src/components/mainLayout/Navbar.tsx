@@ -9,13 +9,20 @@ import {
     NavigationMenuList,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+    const router = useRouter();
+
     return (
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <Link href="/todos" legacyBehavior passHref>
+                    <Link
+                        href="/todos"
+                        onClick={() => router.push("/todos")}
+                        passHref
+                    >
                         <NavigationMenuLink
                             className={navigationMenuTriggerStyle()}
                         >
@@ -24,7 +31,11 @@ export default function Navbar() {
                     </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                    <Link href="/addToDo" legacyBehavior passHref>
+                    <Link
+                        href="/addToDo"
+                        onClick={() => router.push("/addToDo")}
+                        passHref
+                    >
                         <NavigationMenuLink
                             className={navigationMenuTriggerStyle()}
                         >

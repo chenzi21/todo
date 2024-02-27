@@ -16,6 +16,13 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
+    if (
+        isAuthenticated &&
+        (request.url.includes("/login") || request.url.includes("/signup"))
+    ) {
+        return NextResponse.redirect(new URL("/todos", request.url));
+    }
+
     return NextResponse.next();
 }
 

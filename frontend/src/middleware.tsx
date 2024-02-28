@@ -20,7 +20,7 @@ export default async function middleware(request: NextRequest) {
         isAuthenticated &&
         (request.url.includes("/login") || request.url.includes("/signup"))
     ) {
-        return NextResponse.redirect(new URL("/todos", request.url));
+        return NextResponse.redirect(new URL("/", request.url));
     }
 
     return NextResponse.next();

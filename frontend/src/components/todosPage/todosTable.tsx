@@ -175,7 +175,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                         selected.
                     </div>
                 )}
-                {!isMobile && Object.keys(rowSelection).length > 0 && (
+                {Object.keys(rowSelection).length > 0 && (
                     <div>
                         <Button
                             disabled={Object.keys(rowSelection).length == 0}
@@ -204,11 +204,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                         </Button>
                     </div>
                 )}
-                <div
-                    className={`space-x-2 ms-auto flex ${
-                        isMobile ? "justify-between w-[100%]" : ""
-                    }`}
-                >
+                <div className="space-x-2 ms-auto flex">
                     <Button
                         variant="outline"
                         size="sm"

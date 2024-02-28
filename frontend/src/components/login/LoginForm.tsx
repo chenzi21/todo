@@ -37,19 +37,18 @@ export default function LoginForm({ handleSubmit }: Props) {
             e?.preventDefault();
             try {
                 await handleSubmit(inputs);
-                modularToast("Authentication was Successful", {
-                    description: "Great to See You again!",
-                });
-                form.reset(initialState);
-                router.refresh();
             } catch (e: any) {
-                console.log(e);
                 toast.error("Authentication Failed", {
                     description:
-                        "if You are Not a Registered user Please Sign up.",
+                        "Please check your credentials/if You are Not a Registered user Please Sign up.",
                 });
-                form.reset(initialState);
+                return;
             }
+            modularToast("Authentication was Successful", {
+                description: "Great to See You again!",
+            });
+            form.reset(initialState);
+            router.refresh();
         },
         [form]
     );

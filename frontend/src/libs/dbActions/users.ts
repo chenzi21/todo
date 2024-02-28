@@ -54,17 +54,16 @@ export async function createUser(user: User) {
 export async function authenticateUser(user: User) {
     "use server";
 
-    try {
-        const response = await FetchWithCookies("authenticateUser",
-            {
-                method: "POST",
-                body: JSON.stringify(user),
-                cache: "no-store",
-            });
+    const response = await FetchWithCookies("authenticateUser",
+        {
+            method: "POST",
+            body: JSON.stringify(user),
+            cache: "no-store",
+        });
 
+    if (response.ok) {
         setSessionCookie(response);
-    } catch (e: any) {
-        console.log(e);
-        throw new Error(e);
+    } else {
+        throw new Error(response.status.toString());
     }
 }

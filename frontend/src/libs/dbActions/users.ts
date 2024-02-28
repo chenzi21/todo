@@ -18,11 +18,11 @@ async function setSessionCookie(response: Response) {
 
         await new Promise<void>((res, _) => {
             cookieStore.set("session", body.sessionId, {
-                httpOnly: process.env.NODE_ENV === 'production',
-                secure: process.env.NODE_ENV === 'production',
+                httpOnly: true,
+                secure: true,
                 domain: process.env.NODE_ENV === "production" ? "chenzadik.com" : "localhost",
                 name: "session",
-                sameSite: "none",
+                sameSite: "strict",
                 path: "/",
                 maxAge: 86000
             });

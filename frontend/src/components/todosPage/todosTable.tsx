@@ -63,13 +63,9 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => {
     const cols: ColumnDef<any, any>[] = [
         {
             accessorKey: "todo",
+            id: "todo",
             header: "To Do",
             maxSize: 5,
-            cell: ({ cell }) => (
-                <p className="block max-w-24 max-h-6 overflow-x-hidden text-ellipsis">
-                    {cell.renderValue()}
-                </p>
-            ),
         },
         {
             accessorKey: "date",
@@ -225,12 +221,19 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                                                 .map((cell) => (
                                                     <TableCell
                                                         key={cell.id}
-                                                        className={
+                                                        className={`${
                                                             isMobile !==
                                                             undefined
                                                                 ? ""
                                                                 : "opacity-0"
                                                         }
+                                                                ${
+                                                                    cell.column
+                                                                        .id ===
+                                                                    "todo"
+                                                                        ? "max-w-[36vw] sm:max-w-[28vw] md:max-w-[22vw] lg:max-w-[16vw] max-h-[6vh] whitespace-nowrap overflow-hidden text-ellipsis"
+                                                                        : ""
+                                                                }`}
                                                     >
                                                         {flexRender(
                                                             cell.column

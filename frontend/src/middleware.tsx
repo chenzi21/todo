@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getIsAuthenticated } from "./libs/getIsAuthenticated";
 
 export default async function middleware(request: NextRequest) {
-    console.log("in middleware");
-
     if (request.nextUrl.pathname.startsWith("/_next")) {
         console.log("here", request.nextUrl);
         return NextResponse.next();
@@ -11,13 +9,14 @@ export default async function middleware(request: NextRequest) {
 
     const isAuthenticated = await getIsAuthenticated(request);
 
+    console.log("is authenticated: ", isAuthenticated);
+
     if (
         !isAuthenticated &&
         !request.url.includes("/login") &&
         !request.url.includes("/signup")
     ) {
         console.log("not signed in", request.url);
-        console.log("is authenticated: ", isAuthenticated);
         return NextResponse.redirect(new URL("/login", request.url));
     }
 

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    ColumnDef,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
@@ -19,18 +18,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-    DropdownMenuLabel,
-    DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
-import { finishTodos, deleteTodo } from "@/libs/dbActions/todo";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useState } from "react";
 import { Todo } from "@/libs/types/todo";
 import { modularToast } from "@/libs/toastUtils";
@@ -38,111 +26,12 @@ import useIsMobile from "@/libs/useIsMobile";
 import { toast } from "sonner";
 import { Drawer, DrawerTrigger } from "../ui/drawer";
 import TodoDrawer from "./TodoDrawer";
+import useColumns from "@/libs/todosTable";
+import { finishTodos } from "@/libs/dbActions/todo";
 
 interface DataTableProps<TData> {
     data: TData[];
 }
-
-const deleteToDo = (id: number) => {
-    try {
-        deleteTodo(id);
-    } catch (e: any) {
-        console.log(e);
-        toast.error("There Was an Error Deleting To Do", {
-            description: "Please Try Again Later",
-            closeButton: true,
-        });
-        return;
-    }
-    modularToast("To Do deleted Successfully");
-};
-
-const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => {
-    const isMobile = useIsMobile();
-
-    const cols: ColumnDef<any, any>[] = [
-        {
-            accessorKey: "todo",
-            id: "todo",
-            header: "To Do",
-            maxSize: 5,
-        },
-        {
-            accessorKey: "date",
-            header: "Date",
-        },
-        {
-            id: "actions",
-            cell: ({ row }) => (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            className="cursor-pointer"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                try {
-                                    deleteToDo(row.original.id);
-                                    router.refresh();
-                                } catch (e: any) {
-                                    console.log(e);
-                                }
-                            }}
-                        >
-                            Delete To Do
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            ),
-        },
-    ];
-
-    if (isMobile !== undefined && !isMobile) {
-        cols.splice(
-            0,
-            0,
-            {
-                id: "select",
-                cell: ({ row }) => (
-                    <Checkbox
-                        onClick={(e) => e.stopPropagation()}
-                        disabled={row.original.is_done}
-                        checked={!row.original.is_done && row.getIsSelected()}
-                        onCheckedChange={(value) => row.toggleSelected(!!value)}
-                        aria-label="Select row"
-                        className="block"
-                    />
-                ),
-                enableSorting: false,
-                enableHiding: false,
-            },
-            {
-                accessorKey: "id",
-                header: "ID",
-            }
-        );
-        cols.splice(
-            4,
-            0,
-            {
-                accessorKey: "urgency",
-                header: "Urgency",
-            },
-            {
-                accessorKey: "is_done",
-                header: "is Done",
-            }
-        );
-    }
-
-    return cols;
-};
 
 export default function TodosTable({ data }: DataTableProps<Todo>) {
     const router = useRouter();
@@ -158,6 +47,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
+        enableSorting: true,
         getFilteredRowModel: getFilteredRowModel(),
         onRowSelectionChange: setRowSelection,
         state: {
@@ -186,13 +76,30 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                                                     : "opacity-0"
                                             }
                                         >
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                      header.column.columnDef
-                                                          .header,
-                                                      header.getContext()
-                                                  )}
+                                            {header.isPlaceholder ? null : (
+                                                <div
+                                                    {...{
+                                                        className:
+                                                            header.column.getCanSort()
+                                                                ? "cursor-pointer select-none"
+                                                                : "",
+                                                        onClick:
+                                                            header.column.getToggleSortingHandler(),
+                                                    }}
+                                                >
+                                                    {flexRender(
+                                                        header.column.columnDef
+                                                            .header,
+                                                        header.getContext()
+                                                    )}
+                                                    {{
+                                                        desc: " 🔼",
+                                                        asc: " 🔽",
+                                                    }[
+                                                        header.column.getIsSorted() as string
+                                                    ] ?? null}
+                                                </div>
+                                            )}
                                         </TableHead>
                                     );
                                 })}

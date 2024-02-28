@@ -24,16 +24,9 @@ import { Command, CommandGroup, CommandItem } from "../ui/command";
 import { TodoInputs } from "@/libs/types/todo";
 import { modularToast } from "@/libs/toastUtils";
 import { toast } from "sonner";
+import { urgencyList } from "@/libs/urgencies";
 
-const urgencyList = [
-    { label: "very-low", value: "very-low" },
-    { label: "low", value: "low" },
-    { label: "medium", value: "medium" },
-    { label: "high", value: "high" },
-    { label: "very-high", value: "very-high" },
-] as const;
-
-const initialState = {
+export const initialState = {
     todo: "",
     date: undefined,
     urgency: "low",

@@ -29,7 +29,6 @@ export default function Navbar() {
                     <Link
                         href="/addToDo"
                         onClick={() => {
-                            console.log("pressed");
                             router.push("/addToDo");
                         }}
                         passHref

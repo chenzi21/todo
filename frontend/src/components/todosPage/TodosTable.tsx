@@ -60,6 +60,10 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
         },
     });
 
+    const filteredData = table
+        .getFilteredRowModel()
+        .rows.map((row) => row.original);
+
     return (
         <div className="w-full">
             <div className="rounded-md border">
@@ -102,7 +106,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                                                     </div>
                                                     {header.column.getCanFilter() && (
                                                         <TableFilter
-                                                            data={data}
+                                                            data={filteredData}
                                                             header={header}
                                                         />
                                                     )}

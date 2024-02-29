@@ -28,6 +28,7 @@ import { Drawer, DrawerTrigger } from "../ui/drawer";
 import TodoDrawer from "./TodoDrawer";
 import useColumns from "@/libs/todosTable";
 import { finishTodos } from "@/libs/dbActions/todo";
+import TableFilter from "./TableFilter";
 
 interface DataTableProps<TData> {
     data: TData[];
@@ -77,27 +78,34 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                                             }
                                         >
                                             {header.isPlaceholder ? null : (
-                                                <div
-                                                    {...{
-                                                        className:
+                                                <div className="flex justify-between align-center pr-4">
+                                                    <div
+                                                        className={
                                                             header.column.getCanSort()
-                                                                ? "cursor-pointer select-none"
-                                                                : "",
-                                                        onClick:
-                                                            header.column.getToggleSortingHandler(),
-                                                    }}
-                                                >
-                                                    {flexRender(
-                                                        header.column.columnDef
-                                                            .header,
-                                                        header.getContext()
+                                                                ? "cursor-pointer select-none w-max pr-8"
+                                                                : ""
+                                                        }
+                                                        onClick={header.column.getToggleSortingHandler()}
+                                                    >
+                                                        {flexRender(
+                                                            header.column
+                                                                .columnDef
+                                                                .header,
+                                                            header.getContext()
+                                                        )}
+                                                        {{
+                                                            desc: " 🔼",
+                                                            asc: " 🔽",
+                                                        }[
+                                                            header.column.getIsSorted() as string
+                                                        ] ?? null}
+                                                    </div>
+                                                    {header.column.getCanFilter() && (
+                                                        <TableFilter
+                                                            data={data}
+                                                            header={header}
+                                                        />
                                                     )}
-                                                    {{
-                                                        desc: " 🔼",
-                                                        asc: " 🔽",
-                                                    }[
-                                                        header.column.getIsSorted() as string
-                                                    ] ?? null}
                                                 </div>
                                             )}
                                         </TableHead>

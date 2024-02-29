@@ -42,8 +42,8 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => [
         cell: ({ row }) => (
             <Checkbox
                 onClick={(e) => e.stopPropagation()}
-                disabled={row.original.is_done}
-                checked={!row.original.is_done && row.getIsSelected()}
+                disabled={row.original.is_done === "Yes"}
+                checked={row.original.is_done === "No" && row.getIsSelected()}
                 onCheckedChange={(value) => row.toggleSelected(!!value)}
                 aria-label="Select row"
                 className="block"
@@ -54,9 +54,12 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => [
     },
     {
         accessorKey: "id",
+        id: "id",
         sortingFn: "auto",
         sortDescFirst: false,
         invertSorting: true,
+        enableColumnFilter: true,
+        filterFn: (row, colId, filterVal) => row.getValue(colId) == filterVal,
         header: "ID",
     },
     {
@@ -115,7 +118,7 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => [
                     >
                         Delete To Do
                     </DropdownMenuItem>
-                    {!row.original.is_done && (
+                    {row.original.is_done === "No" && (
                         <DropdownMenuItem
                             className="cursor-pointer"
                             onClick={(e) => {
@@ -138,3 +141,4 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => [
 ];
 
 export default useColumns;
+

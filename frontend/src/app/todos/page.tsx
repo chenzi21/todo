@@ -1,6 +1,6 @@
 "use server";
 
-import TodosTable from "@/components/todosPage/todosTable";
+import TodosTable from "@/components/todosPage/TodosTable";
 import { getTodos } from "@/libs/dbActions/todo";
 import { Todo } from "@/libs/types/todo";
 import { Suspense } from "react";
@@ -16,6 +16,7 @@ export default async function Home() {
                         todos?.map((todo: Todo) => ({
                             ...todo,
                             date: new Date(todo.date).toLocaleDateString(),
+                            is_done: todo.is_done ? "Yes" : "No",
                         })) ?? []
                     }
                 />

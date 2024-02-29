@@ -37,29 +37,25 @@ export default function TableFilter({ data, header }: Props) {
                 {[
                     ...new Set(
                         data.map((todo) =>
-                            header.column.id in todo ? (
-                                <DropdownMenuItem
-                                    key={`${todo.id}_${header.id}`}
-                                    onClick={() =>
-                                        header.column.setFilterValue(
-                                            todo[
-                                                header.column
-                                                    .id as keyof typeof todo
-                                            ].toString()
-                                        )
-                                    }
-                                >
-                                    <p className="whitespace-nowrap overflow-hidden text-ellipsis">
-                                        {todo[
-                                            header.column
-                                                .id as keyof typeof todo
-                                        ].toString()}
-                                    </p>
-                                </DropdownMenuItem>
-                            ) : null
+                            header.column.id in todo
+                                ? todo[
+                                      header.column.id as keyof typeof todo
+                                  ].toString()
+                                : null
                         )
                     ),
-                ].filter((val) => !!val)}
+                ]
+                    .filter((val) => !!val)
+                    .map((val) => (
+                        <DropdownMenuItem
+                            key={`${header.id}_${val}`}
+                            onClick={() => header.column.setFilterValue(val)}
+                        >
+                            <p className="whitespace-nowrap overflow-hidden text-ellipsis">
+                                {val}
+                            </p>
+                        </DropdownMenuItem>
+                    ))}
             </DropdownMenuContent>
         </DropdownMenu>
     );

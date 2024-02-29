@@ -10,6 +10,6 @@ export type Todo = {
     id: number;
     // userId: string;
     // created_at: CDate;
-    is_done: boolean;
+    is_done: "No" | "Yes";
     // is_deleted: boolean;
 } & TodoInputs;

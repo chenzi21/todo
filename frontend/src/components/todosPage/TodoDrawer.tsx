@@ -2,7 +2,6 @@
 
 import { Todo } from "@/libs/types/todo";
 import {
-    DrawerClose,
     DrawerContent,
     DrawerDescription,
     DrawerFooter,
@@ -34,7 +33,7 @@ export default function TodoDrawer({ todo }: Props) {
             </DrawerHeader>
             <div className="flex flex-col gap-2 align-start p-5">
                 <p>urgency: {todo.urgency}</p>
-                <p>is done: {todo.is_done ? "yes" : "no"}</p>
+                <p>is done: {todo.is_done}</p>
             </div>
             <DrawerFooter>
                 <Button
@@ -54,7 +53,7 @@ export default function TodoDrawer({ todo }: Props) {
                         });
                         router.refresh();
                     }}
-                    disabled={todo.is_done}
+                    disabled={todo.is_done === "Yes"}
                 >
                     Mark As Done
                 </Button>

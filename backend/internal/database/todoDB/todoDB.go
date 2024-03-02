@@ -12,6 +12,11 @@ type AddToDoSchema struct {
 	Urgency string    `json:"urgency"`
 }
 
+type EditToDoSchema struct {
+	AddToDoSchema
+	TodoId uint8 `json:"todoId"`
+}
+
 type ToDo struct {
 	AddToDoSchema
 	Id      int `json:"id"`
@@ -22,7 +27,7 @@ type MarkToDosAsDoneSchema struct {
 	Ids []uint8 `json:"ids"`
 }
 
-type DeleteToDoSchema struct {
+type UpdateToDoSchema struct {
 	Id uint8 `json:"id"`
 }
 
@@ -37,7 +42,18 @@ func InsertToDo(args AddToDoSchema, userId string) error {
 	return nil
 }
 
-func DeleteToDo(args DeleteToDoSchema) error {
+func EditToDo(args EditToDoSchema) error {
+	_, err := dbVar.DBcon.Exec("UPDATE todos SET todo = ?, date = ?, urgency = ? WHERE id = ?;", args.Todo, args.Date, args.Urgency, args.TodoId)
+
+	if err != nil {
+		log.Panic(err)
+		return err
+	}
+
+	return nil
+}
+
+func DeleteToDo(args UpdateToDoSchema) error {
 	_, err := dbVar.DBcon.Exec("UPDATE todos SET is_deleted=1 WHERE id=?", args.Id)
 	if err != nil {
 		log.Panic(err)
@@ -89,4 +105,17 @@ func GetAllToDos(userId string) ([]ToDo, error) {
 	}
 
 	return todos, nil
+}
+
+func GetToDo(todoId uint8) (ToDo, error) {
+
+	var todo ToDo
+
+	err := dbVar.DBcon.QueryRow("SELECT id, todo, DATE_FORMAT(date, '%Y-%m-%dT%TZ') as date, urgency, is_done FROM todos WHERE id = ? AND is_deleted = 0 ORDER BY id DESC;", todoId).Scan(&todo.Id, &todo.Todo, &todo.Date, &todo.Urgency, &todo.Is_done)
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return todo, err
 }

@@ -82,7 +82,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                                             }
                                         >
                                             {header.isPlaceholder ? null : (
-                                                <div className="flex justify-between align-center pr-4">
+                                                <div className="flex justify-start gap-4 align-center pr-4">
                                                     <div
                                                         className={
                                                             header.column.getCanSort()

@@ -123,6 +123,17 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => [
                             className="cursor-pointer"
                             onClick={(e) => {
                                 e.stopPropagation();
+                                router.push(`/editTodo/${row.original.id}`);
+                            }}
+                        >
+                            Edit To Do
+                        </DropdownMenuItem>
+                    )}
+                    {row.original.is_done === "No" && (
+                        <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={(e) => {
+                                e.stopPropagation();
                                 try {
                                     finishTodos([row.original.id]);
                                     router.refresh();

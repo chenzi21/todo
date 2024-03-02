@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"      // logging messages to the console.
 	"net/http" // Used for build HTTP servers and clients.
-	"project/internal/api/utils"
+	apiUtils "project/internal/api/utils"
 	"project/internal/database/sessionsDB"
 	"project/internal/database/todoDB"
 
@@ -17,7 +17,7 @@ func Init() {
 
 		
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
+			log.Println(err)
 			return
 		}
 		
@@ -29,8 +29,8 @@ func Init() {
 		}
 
 		userId, err := sessionsDB.GetUserId(sessionId);
-		
-		if err == http.ErrNoCookie {
+
+		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -45,11 +45,29 @@ func Init() {
 		w.WriteHeader(http.StatusCreated)
 	})
 
+	http.HandleFunc("/editTodo", func(w http.ResponseWriter, r *http.Request) {
+		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.EditToDoSchema](w, r, http.MethodPost)
+		
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = todoDB.EditToDo(schema)
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusCreated)
+	})
+
 	http.HandleFunc("/finishTodos", func(w http.ResponseWriter, r *http.Request) {
 		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.MarkToDosAsDoneSchema](w, r, http.MethodPost)
 
-		if err != nil {
-			w.WriteHeader(http.StatusConflict)
+		if err != nil {			
+			log.Println(err)
 			return
 		}
 
@@ -61,14 +79,13 @@ func Init() {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		return
 	})
 
 	http.HandleFunc("/deleteTodo", func(w http.ResponseWriter, r *http.Request) {
-		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.DeleteToDoSchema](w, r, http.MethodPost)
+		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.UpdateToDoSchema](w, r, http.MethodPost)
 
 		if err != nil {
-			w.WriteHeader(http.StatusConflict)
+			log.Println(err)
 			return
 		}
 
@@ -80,7 +97,6 @@ func Init() {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		return
 	})
 
 	http.HandleFunc("/getTodos", func(w http.ResponseWriter, r *http.Request) {
@@ -105,7 +121,7 @@ func Init() {
 			return
 		}
 
-		data, err := todoDB.GetAllToDos(userId)
+		todos, err := todoDB.GetAllToDos(userId)
 
 		if err != nil {
 			log.Println(err)
@@ -115,6 +131,27 @@ func Init() {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(data)
+		json.NewEncoder(w).Encode(todos)
+	})
+
+	http.HandleFunc("/getTodo", func(w http.ResponseWriter, r *http.Request) {
+		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.UpdateToDoSchema](w, r, http.MethodPost)
+
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		todo, err := todoDB.GetToDo(schema.Id)
+
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(todo)
 	})
 }

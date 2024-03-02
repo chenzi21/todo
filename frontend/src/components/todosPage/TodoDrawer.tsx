@@ -35,7 +35,7 @@ export default function TodoDrawer({ todo }: Props) {
                 <p>urgency: {todo.urgency}</p>
                 <p>is done: {todo.is_done}</p>
             </div>
-            <DrawerFooter>
+            <DrawerFooter className="flex flex-row justify-center gap-6">
                 <Button
                     onClick={() => {
                         try {
@@ -56,6 +56,12 @@ export default function TodoDrawer({ todo }: Props) {
                     disabled={todo.is_done === "Yes"}
                 >
                     Mark As Done
+                </Button>
+                <Button
+                    onClick={() => router.push(`/editTodo/${todo.id}`)}
+                    disabled={todo.is_done === "Yes"}
+                >
+                    Edit Todo
                 </Button>
             </DrawerFooter>
         </DrawerContent>

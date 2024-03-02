@@ -53,21 +53,10 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => [
         enableHiding: false,
     },
     {
-        accessorKey: "id",
-        id: "id",
-        sortingFn: "auto",
-        sortDescFirst: false,
-        invertSorting: true,
-        enableColumnFilter: true,
-        filterFn: (row, colId, filterVal) => row.getValue(colId) == filterVal,
-        header: "ID",
-    },
-    {
         accessorKey: "todo",
         id: "todo",
         header: "To Do",
         sortingFn: "textCaseSensitive",
-        maxSize: 5,
     },
     {
         accessorKey: "date",
@@ -80,7 +69,7 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => [
     {
         accessorKey: "urgency",
         id: "urgency",
-        invertSorting: true,
+        sortDescFirst: true,
         sortingFn: (rowa, rowb, colId) =>
             (urgencyToNumericValues[rowa.getValue(colId) as UrgencyKeys] ?? 0) -
             (urgencyToNumericValues[rowb.getValue(colId) as UrgencyKeys] ?? 0),

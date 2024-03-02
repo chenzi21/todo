@@ -29,6 +29,7 @@ import TodoDrawer from "./TodoDrawer";
 import useColumns from "@/libs/todosTable";
 import { finishTodos } from "@/libs/dbActions/todo";
 import TableFilter from "./TableFilter";
+import { SortAscIcon, SortDescIcon } from "lucide-react";
 
 interface DataTableProps<TData> {
     data: TData[];
@@ -82,14 +83,13 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                                             }
                                         >
                                             {header.isPlaceholder ? null : (
-                                                <div className="flex justify-start gap-4 align-center pr-4">
+                                                <div className="flex justify-start align-center pr-4">
                                                     <div
                                                         className={
                                                             header.column.getCanSort()
-                                                                ? "cursor-pointer select-none w-max pr-8"
+                                                                ? "flex gap-2 cursor-pointer select-none w-max"
                                                                 : ""
                                                         }
-                                                        onClick={header.column.getToggleSortingHandler()}
                                                     >
                                                         {flexRender(
                                                             header.column
@@ -97,19 +97,39 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                                                                 .header,
                                                             header.getContext()
                                                         )}
-                                                        {{
-                                                            desc: " 🔼",
-                                                            asc: " 🔽",
-                                                        }[
-                                                            header.column.getIsSorted() as string
-                                                        ] ?? null}
+                                                        {header.column.getCanSort() && (
+                                                            <div
+                                                                className={
+                                                                    !!header.column.getIsSorted()
+                                                                        ? "text-black"
+                                                                        : ""
+                                                                }
+                                                                onClick={header.column.getToggleSortingHandler()}
+                                                            >
+                                                                {
+                                                                    {
+                                                                        desc: (
+                                                                            <SortDescIcon />
+                                                                        ),
+                                                                        asc: (
+                                                                            <SortAscIcon />
+                                                                        ),
+                                                                    }[
+                                                                        header.column.getIsSorted() ||
+                                                                            "desc"
+                                                                    ]
+                                                                }
+                                                            </div>
+                                                        )}
+                                                        {header.column.getCanFilter() && (
+                                                            <TableFilter
+                                                                data={
+                                                                    filteredData
+                                                                }
+                                                                header={header}
+                                                            />
+                                                        )}
                                                     </div>
-                                                    {header.column.getCanFilter() && (
-                                                        <TableFilter
-                                                            data={filteredData}
-                                                            header={header}
-                                                        />
-                                                    )}
                                                 </div>
                                             )}
                                         </TableHead>

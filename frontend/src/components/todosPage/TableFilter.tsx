@@ -20,7 +20,7 @@ export default function TableFilter({ data, header }: Props) {
     if (!!header.column.getFilterValue()) {
         return (
             <FilterXIcon
-                className="cursor-pointer"
+                className="cursor-pointer text-black"
                 size={ICON_SIZE}
                 onClick={() => header.column.setFilterValue(undefined)}
             />
@@ -32,7 +32,10 @@ export default function TableFilter({ data, header }: Props) {
             <DropdownMenuTrigger asChild>
                 <FilterIcon className="cursor-pointer" size={ICON_SIZE} />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="max-w-[50vw]" align="end">
+            <DropdownMenuContent
+                className="max-w-[50vw] max-h-[29vh] overflow-y-auto"
+                align="end"
+            >
                 <DropdownMenuLabel>Filter</DropdownMenuLabel>
                 {[
                     ...new Set(

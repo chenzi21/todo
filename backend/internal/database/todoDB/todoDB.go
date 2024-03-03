@@ -14,21 +14,21 @@ type AddToDoSchema struct {
 
 type EditToDoSchema struct {
 	AddToDoSchema
-	TodoId uint8 `json:"todoId"`
+	TodoId string `json:"todoId"`
 }
 
 type ToDo struct {
 	AddToDoSchema
-	Id      int `json:"id"`
+	Id      string `json:"id"`
 	Is_done int `json:"is_done"`
 }
 
-type MarkToDosAsDoneSchema struct {
-	Ids []uint8 `json:"ids"`
+type UpdateToDosSchema struct {
+	Ids []string `json:"ids"`
 }
 
 type UpdateToDoSchema struct {
-	Id uint8 `json:"id"`
+	Id string `json:"id"`
 }
 
 func InsertToDo(args AddToDoSchema, userId string) error {
@@ -53,8 +53,14 @@ func EditToDo(args EditToDoSchema) error {
 	return nil
 }
 
-func DeleteToDo(args UpdateToDoSchema) error {
-	_, err := dbVar.DBcon.Exec("UPDATE todos SET is_deleted=1 WHERE id=?", args.Id)
+func DeleteToDo(args UpdateToDosSchema) error {
+	values := make([]interface{}, len(args.Ids))
+
+	for i := range args.Ids {
+		values[i] = args.Ids[i]
+	}
+
+	_, err := dbVar.DBcon.Exec("UPDATE todos SET is_deleted=1 WHERE id IN (?"+strings.Repeat(",?", len(args.Ids)-1)+");", values...)
 	if err != nil {
 		log.Panic(err)
 		return err
@@ -63,7 +69,7 @@ func DeleteToDo(args UpdateToDoSchema) error {
 	return nil
 }
 
-func MarkToDosAsDone(args MarkToDosAsDoneSchema) error {
+func MarkToDosAsDone(args UpdateToDosSchema) error {
 	values := make([]interface{}, len(args.Ids))
 
 	for i := range args.Ids {
@@ -107,11 +113,11 @@ func GetAllToDos(userId string) ([]ToDo, error) {
 	return todos, nil
 }
 
-func GetToDo(todoId uint8) (ToDo, error) {
+func GetToDo(args UpdateToDoSchema) (ToDo, error) {
 
 	var todo ToDo
 
-	err := dbVar.DBcon.QueryRow("SELECT id, todo, DATE_FORMAT(date, '%Y-%m-%dT%TZ') as date, urgency, is_done FROM todos WHERE id = ? AND is_deleted = 0 ORDER BY id DESC;", todoId).Scan(&todo.Id, &todo.Todo, &todo.Date, &todo.Urgency, &todo.Is_done)
+	err := dbVar.DBcon.QueryRow("SELECT id, todo, DATE_FORMAT(date, '%Y-%m-%dT%TZ') as date, urgency, is_done FROM todos WHERE id = ? AND is_deleted = 0;", args.Id).Scan(&todo.Id, &todo.Todo, &todo.Date, &todo.Urgency, &todo.Is_done)
 
 	if err != nil {
 		log.Panic(err)

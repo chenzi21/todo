@@ -12,7 +12,7 @@ export default async function Page({
         id: string;
     };
 }) {
-    const todo = (await getTodo(Number(params.id))) as Todo;
+    const todo = (await getTodo(params.id)) as Todo;
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">

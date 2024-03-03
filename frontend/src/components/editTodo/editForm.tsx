@@ -34,12 +34,12 @@ export default function EditToDoFrom({ todo }: Props) {
     const router = useRouter();
 
     const form = useForm<TodoInputs & { date: CDate | undefined }>({
-        defaultValues: todo,
+        defaultValues: { ...todo, date: undefined },
         shouldUseNativeValidation: true,
     });
 
     useEffect(() => {
-        form.setValue("date", new CDate());
+        form.setValue("date", new CDate(todo.date));
     }, []);
 
     const handleSubmit = useCallback(() => {

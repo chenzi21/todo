@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { Drawer, DrawerTrigger } from "../ui/drawer";
 import TodoDrawer from "./TodoDrawer";
 import useColumns from "@/libs/todosTable";
-import { finishTodos } from "@/libs/dbActions/todo";
+import { deleteTodos, finishTodos } from "@/libs/dbActions/todo";
 import TableFilter from "./TableFilter";
 import { SortAscIcon, SortDescIcon } from "lucide-react";
 
@@ -208,7 +208,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                     </div>
                 )}
                 {Object.keys(rowSelection).length > 0 && (
-                    <div>
+                    <div className="flex gap-4">
                         <Button
                             disabled={Object.keys(rowSelection).length == 0}
                             onClick={() => {
@@ -233,6 +233,31 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                             }}
                         >
                             Mark as Done
+                        </Button>
+                        <Button
+                            disabled={Object.keys(rowSelection).length == 0}
+                            onClick={() => {
+                                const ids = Object.keys(rowSelection).map(
+                                    (val) => data[Number(val)].id
+                                );
+                                try {
+                                    deleteTodos(ids);
+                                } catch (e: any) {
+                                    console.log(e);
+                                    toast.error("Error Deleting To Dos", {
+                                        description:
+                                            "There was a Problem Deleting To Dos, Please Try Again Later",
+                                    });
+                                    return;
+                                }
+                                modularToast("Succesfully Updated To Dos", {
+                                    description: "To Dos were Updated",
+                                });
+                                setRowSelection({});
+                                router.refresh();
+                            }}
+                        >
+                            Delete To dos
                         </Button>
                     </div>
                 )}

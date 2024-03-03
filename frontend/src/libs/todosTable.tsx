@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { deleteTodo, finishTodos } from "./dbActions/todo";
+import { deleteTodos, finishTodos } from "./dbActions/todo";
 import { UrgencyKeys, urgencyList } from "./urgencies";
 import { modularToast } from "./toastUtils";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -22,9 +22,9 @@ for (let i = 0; i < urgencyList.length; i++) {
     urgencyToNumericValues[value] = i;
 }
 
-const deleteToDo = (id: number) => {
+const deleteToDo = (id: string[]) => {
     try {
-        deleteTodo(id);
+        deleteTodos(id);
     } catch (e: any) {
         console.log(e);
         toast.error("There Was an Error Deleting To Do", {
@@ -98,7 +98,7 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => [
                         onClick={(e) => {
                             e.stopPropagation();
                             try {
-                                deleteToDo(row.original.id);
+                                deleteToDo([row.original.id]);
                                 router.refresh();
                             } catch (e: any) {
                                 console.log(e);
@@ -112,7 +112,7 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => [
                             className="cursor-pointer"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                router.push(`/editTodo/${row.original.id}`);
+                                router.push(`/todos/${row.original.id}`);
                             }}
                         >
                             Edit To Do

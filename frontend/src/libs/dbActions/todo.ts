@@ -23,7 +23,7 @@ export async function addTodo(formValues: TodoInputs) {
     }
 }
 
-export async function editTodo(formValues: TodoInputs, todoId: number) {
+export async function editTodo(formValues: TodoInputs, todoId: string) {
     "use server";
 
     try {
@@ -34,7 +34,7 @@ export async function editTodo(formValues: TodoInputs, todoId: number) {
                     todo: formValues.todo,
                     urgency: formValues.urgency,
                     date: new CDate(formValues.date).toDateTime(),
-                    todoId: Number(todoId),
+                    todoId: todoId,
                 }),
                 cache: "no-store",
             });
@@ -43,7 +43,7 @@ export async function editTodo(formValues: TodoInputs, todoId: number) {
     }
 }
 
-export async function finishTodos(ids: number[]) {
+export async function finishTodos(ids: string[]) {
     "use server";
 
     try {
@@ -58,14 +58,14 @@ export async function finishTodos(ids: number[]) {
     }
 }
 
-export async function deleteTodo(id: number) {
+export async function deleteTodos(ids: string[]) {
     "use server";
 
     try {
         FetchWithCookies("deleteTodo",
             {
                 method: "POST",
-                body: JSON.stringify({ id }),
+                body: JSON.stringify({ ids }),
                 cache: "no-store",
             });
     } catch (e: any) {
@@ -86,7 +86,7 @@ export async function getTodos() {
     }
 }
 
-export async function getTodo(id: number) {
+export async function getTodo(id: string) {
     "use server";
 
     try {

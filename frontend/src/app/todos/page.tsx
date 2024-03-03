@@ -15,7 +15,7 @@ export default async function Home() {
                     data={
                         todos?.map((todo: Todo) => ({
                             ...todo,
-                            date: new Date(todo.date).toLocaleDateString(),
+                            date: new Date(todo.date).toLocaleString(),
                             is_done: todo.is_done ? "Yes" : "No",
                         })) ?? []
                     }

@@ -58,7 +58,7 @@ export default function TodoDrawer({ todo }: Props) {
                     Mark As Done
                 </Button>
                 <Button
-                    onClick={() => router.push(`/editTodo/${todo.id}`)}
+                    onClick={() => router.push(`/todos/${todo.id}`)}
                     disabled={todo.is_done === "Yes"}
                 >
                     Edit Todo

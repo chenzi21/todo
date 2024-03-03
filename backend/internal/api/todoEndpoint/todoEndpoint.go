@@ -64,7 +64,7 @@ func Init() {
 	})
 
 	http.HandleFunc("/finishTodos", func(w http.ResponseWriter, r *http.Request) {
-		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.MarkToDosAsDoneSchema](w, r, http.MethodPost)
+		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.UpdateToDosSchema](w, r, http.MethodPost)
 
 		if err != nil {			
 			log.Println(err)
@@ -82,7 +82,7 @@ func Init() {
 	})
 
 	http.HandleFunc("/deleteTodo", func(w http.ResponseWriter, r *http.Request) {
-		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.UpdateToDoSchema](w, r, http.MethodPost)
+		schema, err := apiUtils.RequestWithSchemaChecksAndDataValidation[todoDB.UpdateToDosSchema](w, r, http.MethodPost)
 
 		if err != nil {
 			log.Println(err)
@@ -142,7 +142,7 @@ func Init() {
 			return
 		}
 
-		todo, err := todoDB.GetToDo(schema.Id)
+		todo, err := todoDB.GetToDo(schema)
 
 		if err != nil {
 			log.Println(err)

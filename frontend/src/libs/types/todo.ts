@@ -7,7 +7,7 @@ export type TodoInputs = {
 };
 
 export type Todo = {
-    id: number;
+    id: string;
     // userId: string;
     // created_at: CDate;
     is_done: "No" | "Yes";

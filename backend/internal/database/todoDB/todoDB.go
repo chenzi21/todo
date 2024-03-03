@@ -86,7 +86,7 @@ func MarkToDosAsDone(args UpdateToDosSchema) error {
 }
 
 func GetAllToDos(userId string) ([]ToDo, error) {
-	rows, err := dbVar.DBcon.Query("SELECT id, todo, DATE_FORMAT(date, '%Y-%m-%dT%TZ') as date, urgency, is_done FROM todos WHERE userId = ? AND is_deleted = 0 ORDER BY id DESC;", userId)
+	rows, err := dbVar.DBcon.Query("SELECT id, todo, DATE_FORMAT(date, '%Y-%m-%dT%TZ') as date, urgency, is_done FROM todos WHERE userId = ? AND is_deleted = 0 ORDER BY created_at DESC;", userId)
 
 	if err != nil {
 		log.Panic(err)

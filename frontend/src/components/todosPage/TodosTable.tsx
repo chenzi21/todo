@@ -89,8 +89,14 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
     const pageSize = isMobile === false ? 10 : 8;
     const columns = useColumns(router);
 
+    const parsedData = data?.map((todo: Todo) => ({
+        ...todo,
+        date: new Date(todo.date).toLocaleString(),
+        is_done: todo.is_done ? "Yes" : "No",
+    }));
+
     const table = useReactTable({
-        data,
+        data: parsedData,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),

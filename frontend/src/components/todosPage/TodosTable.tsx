@@ -40,8 +40,8 @@ const MILLISECONDS = 1000;
 const SECONDS = 60;
 const MINUTES = 60;
 const HOURS = 24;
-
 const DAY = MILLISECONDS * SECONDS * MINUTES * HOURS;
+
 const now = new Date().getTime();
 
 const getCellClassName = (
@@ -90,11 +90,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
     const columns = useColumns(router);
 
     const table = useReactTable({
-        data: data.map((todo: Todo) => ({
-            ...todo,
-            date: new Date(todo.date).toLocaleString(),
-            is_done: todo.is_done ? "Yes" : "No",
-        })),
+        data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),

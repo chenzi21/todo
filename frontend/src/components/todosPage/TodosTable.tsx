@@ -1,6 +1,7 @@
 "use client";
 
 import {
+    Cell,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
@@ -34,6 +35,51 @@ import { SortAscIcon, SortDescIcon } from "lucide-react";
 interface DataTableProps<TData> {
     data: TData[];
 }
+
+const MILLISECONDS = 1000;
+const SECONDS = 60;
+const MINUTES = 60;
+const HOURS = 24;
+
+const DAY = MILLISECONDS * SECONDS * MINUTES * HOURS;
+const now = new Date().getTime();
+
+const getCellClassName = (
+    cell: Cell<Omit<Todo, "date"> & { date: string }, unknown>
+) => {
+    if (cell.column.id === "todo") {
+        return `max-w-[36vw] sm:max-w-[28vw] md:max-w-[22vw] lg:max-w-[16vw] max-h-[6vh] whitespace-nowrap overflow-hidden text-ellipsis${
+            cell.row.original.is_done === "Yes" ? " line-through" : ""
+        }`;
+    }
+
+    if (cell.column.id === "date" && cell.row.original.is_done === "No") {
+        const timeDifference = new Date(cell.row.original.date).getTime() - now;
+        if (timeDifference <= DAY) {
+            if (timeDifference > 0) {
+                return "text-yellow-500";
+            }
+            return "text-red-500";
+        }
+    }
+
+    if (cell.column.id === "urgency") {
+        switch (cell.row.original.urgency) {
+            case "very-low":
+                return "text-green-500";
+            case "low":
+                return "text-green-400";
+            case "medium":
+                return "text-yellow-400";
+            case "high":
+                return "text-red-400";
+            case "very-high":
+                return "text-red-500";
+        }
+    }
+
+    return "";
+};
 
 export default function TodosTable({ data }: DataTableProps<Todo>) {
     const router = useRouter();
@@ -166,14 +212,9 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                                                             undefined
                                                                 ? ""
                                                                 : "opacity-0"
-                                                        }
-                                                                ${
-                                                                    cell.column
-                                                                        .id ===
-                                                                    "todo"
-                                                                        ? "max-w-[36vw] sm:max-w-[28vw] md:max-w-[22vw] lg:max-w-[16vw] max-h-[6vh] whitespace-nowrap overflow-hidden text-ellipsis"
-                                                                        : ""
-                                                                }`}
+                                                        } ${getCellClassName(
+                                                            cell
+                                                        )}`}
                                                     >
                                                         {flexRender(
                                                             cell.column

@@ -12,7 +12,7 @@ import { BasicInputProps } from "@/libs/types/inputs";
 export default function UserNameInput({
     form,
     label = "username",
-    description = "Please enter Your Username",
+    description = "please enter your username",
 }: BasicInputProps) {
     if (!("username" in form.getValues())) {
         throw new Error(

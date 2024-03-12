@@ -20,7 +20,7 @@ export default function PasswordInput({
     registerOptions,
     inputName = "password",
     label = "password",
-    description = "Please enter Your password",
+    description = "please enter your password",
 }: ExtendedPasswordInputProps) {
     if (!(inputName in form.getValues())) {
         throw new Error(

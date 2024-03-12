@@ -75,18 +75,18 @@ export default function SignUpForm({ handleSubmit }: Props) {
                 <UserNameInput
                     form={form}
                     label="new username"
-                    description="Please enter Your Desired Username"
+                    description="please enter your desired username"
                 />
                 <PasswordInput
                     form={form}
                     label="new password"
-                    description="Please enter Your Desired Password"
+                    description="please enter your desired password"
                 />
                 <PasswordInput
                     form={form}
                     inputName="confirmPassword"
                     label="confirm password"
-                    description="Please confirm Your Desired Password"
+                    description="please confirm your desired password"
                     registerOptions={{
                         deps: "password",
                         validate: (value, formValues) =>

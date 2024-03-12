@@ -10,7 +10,14 @@ export const metadata: Metadata = {
     title: "To Do App",
     description:
         "a Fun To Do App, experimenting with nextjs, golang, mysql and docker",
-    icons: { icon: "/favicon.ico", href: "/favicon.ico" },
+    icons: {
+        icon: [
+            {
+                url: "/images/favicon.ico",
+                href: "/images/favicon.ico",
+            },
+        ],
+    },
 };
 
 export default function RootLayout({

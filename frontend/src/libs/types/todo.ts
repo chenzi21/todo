@@ -11,5 +11,6 @@ export type Todo = {
     // userId: string;
     // created_at: CDate;
     is_done: "No" | "Yes";
+    date: string
     // is_deleted: boolean;
-} & TodoInputs;
+} & Omit<TodoInputs, "date">;

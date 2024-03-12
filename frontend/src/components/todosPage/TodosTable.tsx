@@ -20,7 +20,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Todo } from "@/libs/types/todo";
 import { modularToast } from "@/libs/toastUtils";
 import useIsMobile from "@/libs/useIsMobile";
@@ -89,14 +89,12 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
     const pageSize = isMobile === false ? 10 : 8;
     const columns = useColumns(router);
 
-    const parsedData = data?.map((todo: Todo) => ({
-        ...todo,
-        date: new Date(todo.date).toLocaleString(),
-        is_done: todo.is_done ? "Yes" : "No",
-    }));
-
     const table = useReactTable({
-        data: parsedData,
+        data: data.map((todo: Todo) => ({
+            ...todo,
+            date: new Date(todo.date).toLocaleString(),
+            is_done: todo.is_done ? "Yes" : "No",
+        })),
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -117,6 +115,14 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
     const filteredData = table
         .getFilteredRowModel()
         .rows.map((row) => row.original);
+
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    if (!isClient) return null;
 
     return (
         <div className="w-full">
@@ -212,6 +218,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
                                                 .getVisibleCells()
                                                 .map((cell) => (
                                                     <TableCell
+                                                        suppressHydrationWarning
                                                         key={cell.id}
                                                         className={`${
                                                             isMobile !==

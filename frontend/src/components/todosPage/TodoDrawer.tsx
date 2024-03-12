@@ -2,6 +2,7 @@
 
 import { Todo } from "@/libs/types/todo";
 import {
+    DrawerClose,
     DrawerContent,
     DrawerDescription,
     DrawerFooter,
@@ -36,27 +37,29 @@ export default function TodoDrawer({ todo }: Props) {
                 <p>is done: {todo.is_done}</p>
             </div>
             <DrawerFooter className="flex flex-row justify-center gap-6">
-                <Button
-                    onClick={() => {
-                        try {
-                            finishTodos([todo.id]);
-                        } catch (e: any) {
-                            console.log(e);
-                            toast.error("Error Updating To Dos", {
-                                description:
-                                    "There was a Problem Updating To Dos, Please Try Again Later",
+                <DrawerClose>
+                    <Button
+                        onClick={() => {
+                            try {
+                                finishTodos([todo.id]);
+                            } catch (e: any) {
+                                console.log(e);
+                                toast.error("Error Updating To Dos", {
+                                    description:
+                                        "There was a Problem Updating To Dos, Please Try Again Later",
+                                });
+                                return;
+                            }
+                            modularToast("Succesfully Updated To Dos", {
+                                description: "To Dos were Updated",
                             });
-                            return;
-                        }
-                        modularToast("Succesfully Updated To Dos", {
-                            description: "To Dos were Updated",
-                        });
-                        router.refresh();
-                    }}
-                    disabled={todo.is_done === "Yes"}
-                >
-                    Mark As Done
-                </Button>
+                            router.refresh();
+                        }}
+                        disabled={todo.is_done === "Yes"}
+                    >
+                        Mark As Done
+                    </Button>
+                </DrawerClose>
                 <Button
                     onClick={() => router.push(`/todos/${todo.id}`)}
                     disabled={todo.is_done === "Yes"}

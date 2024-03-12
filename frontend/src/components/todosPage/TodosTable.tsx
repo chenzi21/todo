@@ -50,6 +50,7 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         enableSorting: true,
+        sortDescFirst: true,
         getFilteredRowModel: getFilteredRowModel(),
         onRowSelectionChange: setRowSelection,
         state: {

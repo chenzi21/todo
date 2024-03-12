@@ -63,13 +63,13 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => [
         id: "date",
         header: "Date",
         enableSorting: true,
-        sortingFn: "datetime",
-        invertSorting: true,
+        sortingFn: (rowa, rowb, colId) =>
+            new Date(rowa.getValue(colId)).getTime() -
+            new Date(rowb.getValue(colId)).getTime(),
     },
     {
         accessorKey: "urgency",
         id: "urgency",
-        sortDescFirst: true,
         sortingFn: (rowa, rowb, colId) =>
             (urgencyToNumericValues[rowa.getValue(colId) as UrgencyKeys] ?? 0) -
             (urgencyToNumericValues[rowb.getValue(colId) as UrgencyKeys] ?? 0),
@@ -77,8 +77,6 @@ const useColumns = (router: AppRouterInstance): ColumnDef<any, any>[] => [
     },
     {
         accessorKey: "is_done",
-        sortDescFirst: false,
-        invertSorting: true,
         header: "is Done",
     },
     {

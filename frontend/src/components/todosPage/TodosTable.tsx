@@ -20,7 +20,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Todo } from "@/libs/types/todo";
 import { modularToast } from "@/libs/toastUtils";
 import useIsMobile from "@/libs/useIsMobile";
@@ -89,8 +89,18 @@ export default function TodosTable({ data }: DataTableProps<Todo>) {
     const pageSize = isMobile === false ? 10 : 8;
     const columns = useColumns(router);
 
+    const parsedData = useMemo(
+        () =>
+            data.map((todo: Todo) => ({
+                ...todo,
+                date: new Date(todo.date).toLocaleString(),
+                is_done: todo.is_done ? "Yes" : "No",
+            })),
+        [data]
+    );
+
     const table = useReactTable({
-        data,
+        data: parsedData,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
